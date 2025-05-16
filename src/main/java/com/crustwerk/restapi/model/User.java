@@ -1,40 +1,67 @@
 package com.crustwerk.restapi.model;
 
+import java.time.LocalDate;
+
 public class User {
-    private String name;
-    private int age;
-    private double weight;
 
-    public User() {
+    private Long id;
+
+    private String username;
+
+    private String email;
+
+    private String passwordHash;
+
+    private LocalDate dateOfBirth;
+
+    private LocalDate createdAt;
+
+
+    public Long getId() {
+        return id;
     }
 
-    public User(String name, int age, double weight) {
-        this.name = name;
-        this.age = age;
-        this.weight = weight;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public double getWeight() {
-        return weight;
+    public String getUsername() {
+        return username;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public int getAge() {
-        return age;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 }
