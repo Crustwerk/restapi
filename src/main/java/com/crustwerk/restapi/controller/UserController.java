@@ -3,13 +3,13 @@ package com.crustwerk.restapi.controller;
 import com.crustwerk.restapi.dto.UserDTO;
 import com.crustwerk.restapi.mapper.UserMapper;
 import com.crustwerk.restapi.model.User;
+import com.crustwerk.restapi.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,22 +17,17 @@ import java.util.List;
 @Validated
 public class UserController {
 
+    private final UserService userService;
     private final UserMapper userMapper;
 
-    // Qui potresti avere un service reale, ma per ora useremo una lista finta
-    private final List<User> users = new ArrayList<>();
-
-    public UserController(UserMapper userMapper) {
+    public UserController(UserService userService, UserMapper userMapper) {
+        this.userService = userService;
         this.userMapper = userMapper;
     }
 
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
-        // Converto DTO in model
-        User user = userMapper.toModel(userDTO);
-        users.add(user);
-
-        // Converto model in DTO per risposta
+        User user = userService.createUser(userDTO);
         UserDTO responseDTO = userMapper.toDTO(user);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
@@ -40,10 +35,10 @@ public class UserController {
     // GET per ottenere tutti gli utenti
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> dtos = new ArrayList<>();
-        for (User user : users) {
-            dtos.add(userMapper.toDTO(user));
-        }
+        List<User> users = userService.getAllUsers();  // devi implementare questo metodo nel service
+        List<UserDTO> dtos = users.stream()
+                .map(userMapper::toDTO)
+                .toList();
         return ResponseEntity.ok(dtos);
     }
 
