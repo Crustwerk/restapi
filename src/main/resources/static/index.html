@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gestione Utenti</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form > div {
+            margin-bottom: 10px;
+        }
+        label {
+            display: inline-block;
+            width: 120px;
+        }
+        input[type="text"], input[type="email"], input[type="password"], input[type="date"] {
+            width: 200px;
+            padding: 5px;
+        }
+        button {
+            padding: 6px 12px;
+            font-size: 1rem;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        li {
+            margin-bottom: 6px;
+            padding: 6px;
+            background: #f2f2f2;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Gestione Utenti</h1>
+
+<h2>Aggiungi nuovo utente</h2>
+<form id="userForm">
+    <div>
+        <label for="username">Username:</label>
+        <input id="username" name="username" type="text" required />
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input id="email" name="email" type="email" required />
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input id="password" name="password" type="password" required />
+    </div>
+    <div>
+        <label for="confirmPassword">Conferma Password:</label>
+        <input id="confirmPassword" name="confirmPassword" type="password" required />
+    </div>
+    <div>
+        <label for="dateOfBirth">Data di nascita:</label>
+        <input id="dateOfBirth" name="dateOfBirth" type="date" required />
+    </div>
+    <button type="submit">Crea Utente</button>
+</form>
+
+<div class="error" id="errorMsg"></div>
+
+<h2>Utenti registrati</h2>
+<ul id="userList">
+    <!-- lista utenti qui -->
+</ul>
+
+<script>
+    const form = document.getElementById('userForm');
+    const userList = document.getElementById('userList');
+    const errorMsg = document.getElementById('errorMsg');
+
+    // Funzione per caricare gli utenti
+    async function loadUsers() {
+        try {
+            const res = await fetch('/api/users');
+            if (!res.ok) throw new Error('Errore nel caricamento utenti');
+            const users = await res.json();
+            userList.innerHTML = '';
+            users.forEach(user => {
+                const li = document.createElement('li');
+                li.textContent = `${user.username} (${user.email}) - Nato il ${user.dateOfBirth}`;
+                userList.appendChild(li);
+            });
+        } catch (err) {
+            errorMsg.textContent = err.message;
+        }
+    }
+
+    // Chiamata iniziale per caricare gli utenti
+    loadUsers();
+
+    // Gestione submit form
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorMsg.textContent = '';
+
+        const data = {
+            username: form.username.value.trim(),
+            email: form.email.value.trim(),
+            password: form.password.value,
+            confirmPassword: form.confirmPassword.value,
+            dateOfBirth: form.dateOfBirth.value
+        };
+
+        // Semplice validazione client side per password
+        if(data.password !== data.confirmPassword){
+            errorMsg.textContent = "Le password non corrispondono.";
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/users', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                errorMsg.textContent = JSON.stringify(errorData);
+                return;
+            }
+
+            form.reset();
+            await loadUsers();
+
+        } catch (err) {
+            errorMsg.textContent = 'Errore di rete o server';
+        }
+    });
+</script>
+
+</body>
+</html>
