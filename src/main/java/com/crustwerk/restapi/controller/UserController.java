@@ -25,6 +25,8 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
+    //RequestBody fa sì che venga deserializzato il body e passato come parametro al metodo
+    //In sua assenza Spring si aspetta una query string (es.?username=mario&email=...)
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
         User user = userService.createUser(userDTO);
@@ -32,10 +34,9 @@ public class UserController {
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
-    // GET per ottenere tutti gli utenti
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<User> users = userService.getAllUsers();  // devi implementare questo metodo nel service
+        List<User> users = userService.getAllUsers();
         List<UserDTO> dtos = users.stream()
                 .map(userMapper::toDTO)
                 .toList();

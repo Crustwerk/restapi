@@ -18,7 +18,7 @@ public class UserDTO {
     private String confirmPassword;
 
     @NotBlank(message = "Date of birth is required")
-    private String dateOfBirth; // formato ISO: "1990-01-01"
+    private String dateOfBirth; //YYYY-MM-DD
 
     public String getUsername() {
         return username;

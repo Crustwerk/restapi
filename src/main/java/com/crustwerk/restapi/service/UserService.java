@@ -3,7 +3,7 @@ package com.crustwerk.restapi.service;
 import com.crustwerk.restapi.dto.UserDTO;
 import com.crustwerk.restapi.mapper.UserMapper;
 import com.crustwerk.restapi.model.User;
-import com.crustwerk.restapi.repository.UserRepository; // supponendo che tu abbia un repository
+import com.crustwerk.restapi.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +23,12 @@ public class UserService {
     }
 
     public User createUser(UserDTO userDTO) {
-        // Validazione semplice: password e conferma devono coincidere
         if (!userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
             throw new IllegalArgumentException("Password and Confirm Password do not match");
         }
 
         User user = userMapper.toModel(userDTO);
-        String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
-        user.setPasswordHash(hashedPassword);
+        user.setPasswordHash(passwordEncoder.encode(userDTO.getPassword()));
         user.setCreatedAt(java.time.LocalDate.now());
         return userRepository.save(user);
     }
@@ -39,5 +37,5 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    // Altri metodi come update, delete, find possono seguire una logica simile
+    // Altri metodi come update, delete, etc
 }
