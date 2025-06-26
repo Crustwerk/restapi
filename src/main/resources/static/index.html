@@ -1,39 +1,59 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Gestione Utenti</title>
     <style>
+        /* selettore di tipo (o elemento) */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
         }
+
+        /* selettore figlio diretto
+            - prende solo i div immediatamente dentro un form (non quelli più annidati) */
         form > div {
             margin-bottom: 10px;
         }
+
+        /* selettore di tipo (o elemento) */
         label {
             display: inline-block;
             width: 120px;
         }
+
+        /* selettore di attributo
+            - stilano solo gli <input> con quel tipo */
         input[type="text"], input[type="email"], input[type="password"], input[type="date"] {
             width: 200px;
             padding: 5px;
         }
+
+        /* selettore di tipo (o elemento) */
         button {
             padding: 6px 12px;
             font-size: 1rem;
         }
+
+        /* selettore di tipo (o elemento)
+            - liste non ordinate */
         ul {
             list-style: none;
             padding-left: 0;
         }
+
+        /* selettore di tipo (o elemento)
+            - ogni voce della lista <li> */
         li {
             margin-bottom: 6px;
             padding: 6px;
             background: #f2f2f2;
             border-radius: 4px;
         }
+
+        /* selettore di classe
+            - qualsiasi elemento con class="error" */
         .error {
             color: red;
             margin-top: 10px;
@@ -48,23 +68,23 @@
 <form id="userForm">
     <div>
         <label for="username">Username:</label>
-        <input id="username" name="username" type="text" required />
+        <input id="username" name="username" type="text" required/>
     </div>
     <div>
         <label for="email">Email:</label>
-        <input id="email" name="email" type="email" required />
+        <input id="email" name="email" type="email" required/>
     </div>
     <div>
         <label for="password">Password:</label>
-        <input id="password" name="password" type="password" required />
+        <input id="password" name="password" type="password" required/>
     </div>
     <div>
         <label for="confirmPassword">Conferma Password:</label>
-        <input id="confirmPassword" name="confirmPassword" type="password" required />
+        <input id="confirmPassword" name="confirmPassword" type="password" required/>
     </div>
     <div>
         <label for="dateOfBirth">Data di nascita:</label>
-        <input id="dateOfBirth" name="dateOfBirth" type="date" required />
+        <input id="dateOfBirth" name="dateOfBirth" type="date" required/>
     </div>
     <button type="submit">Crea Utente</button>
 </form>
@@ -115,7 +135,7 @@
         };
 
         // Semplice validazione client side per password
-        if(data.password !== data.confirmPassword){
+        if (data.password !== data.confirmPassword) {
             errorMsg.textContent = "Le password non corrispondono.";
             return;
         }

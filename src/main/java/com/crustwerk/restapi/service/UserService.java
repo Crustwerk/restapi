@@ -23,10 +23,6 @@ public class UserService {
     }
 
     public User createUser(UserDTO userDTO) {
-        if (!userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
-            throw new IllegalArgumentException("Password and Confirm Password do not match");
-        }
-
         User user = userMapper.toModel(userDTO);
         user.setPasswordHash(passwordEncoder.encode(userDTO.getPassword()));
         user.setCreatedAt(java.time.LocalDate.now());
@@ -36,6 +32,25 @@ public class UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public User updateUser(Long id, UserDTO userDTO) {
+        User existing = getUserById(id);
+        existing.setUsername(userDTO.getUsername());
+        existing.setEmail(userDTO.getEmail());
+        existing.setDateOfBirth(userDTO.getDateOfBirth());
+        // aggiorna altri campi se necessario
+        return userRepository.save(existing);
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+
 
     // Altri metodi come update, delete, etc
 }
