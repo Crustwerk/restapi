@@ -1,6 +1,9 @@
 package com.crustwerk.restapi.mapper;
 
-import com.crustwerk.restapi.dto.UserDTO;
+import com.crustwerk.restapi.dto.CreateUserResponse;
+import com.crustwerk.restapi.dto.GetUserResponse;
+import com.crustwerk.restapi.dto.CreateUserRequest;
+import com.crustwerk.restapi.dto.UpdateUserRequest;
 import com.crustwerk.restapi.model.User;
 import org.springframework.stereotype.Component;
 
@@ -12,29 +15,42 @@ public class UserMapper {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
 
-    // Da DTO a Model
-    public User toModel(UserDTO dto) {
-        if (dto == null) return null;
+    public User toModel(CreateUserRequest createUserRequest) {
+        if (createUserRequest == null) return null;
 
         User user = new User();
-        user.setUsername(dto.getUsername());
-        user.setEmail(dto.getEmail());
-        user.setPasswordHash(dto.getPassword());
-        user.setDateOfBirth(LocalDate.parse(dto.getDateOfBirth(), formatter));
+        user.setUsername(createUserRequest.getUsername());
+        user.setEmail(createUserRequest.getEmail());
+        user.setDateOfBirth(LocalDate.parse(createUserRequest.getDateOfBirth()));
         return user;
     }
 
-    // Da Model a DTO
-    public UserDTO toDTO(User user) {
+    public User toModel(UpdateUserRequest updateUserRequest) {
+        if (updateUserRequest == null) return null;
+        User user = new User();
+        user.setUsername(updateUserRequest.getUsername());
+        user.setEmail(updateUserRequest.getEmail());
+        user.setDateOfBirth(LocalDate.parse(updateUserRequest.getDateOfBirth()));
+        return user;
+    }
+
+    public CreateUserResponse toCreateUserResponse(User user) {
         if (user == null) return null;
 
-        UserDTO dto = new UserDTO();
-        dto.setUsername(user.getUsername());
-        dto.setEmail(user.getEmail());
-        // Non si inviano password nel DTO di risposta generalmente
-        dto.setPassword(null);
-        dto.setConfirmPassword(null);
-        dto.setDateOfBirth(user.getDateOfBirth().format(formatter));
-        return dto;
+        CreateUserResponse response = new CreateUserResponse();
+        response.setId(user.getId());
+        response.setUsername(user.getUsername());
+        response.setEmail(user.getEmail());
+        return response;
+    }
+
+    public GetUserResponse toGetUserResponse(User user) {
+        if (user == null) return null;
+
+        GetUserResponse response = new GetUserResponse();
+        response.setId(user.getId());
+        response.setUsername(user.getUsername());
+        response.setEmail(user.getEmail());
+        return response;
     }
 }

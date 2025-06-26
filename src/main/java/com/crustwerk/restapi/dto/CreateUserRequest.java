@@ -3,7 +3,7 @@ package com.crustwerk.restapi.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public class UserDTO {
+public class CreateUserRequest {
 
     @NotBlank(message = "Username is required")
     private String username;

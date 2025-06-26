@@ -1,6 +1,5 @@
 package com.crustwerk.restapi.service;
 
-import com.crustwerk.restapi.dto.UserDTO;
 import com.crustwerk.restapi.mapper.UserMapper;
 import com.crustwerk.restapi.model.User;
 import com.crustwerk.restapi.repository.UserRepository;
@@ -22,9 +21,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User createUser(UserDTO userDTO) {
-        User user = userMapper.toModel(userDTO);
-        user.setPasswordHash(passwordEncoder.encode(userDTO.getPassword()));
+    public User createUser(User user) {
         user.setCreatedAt(java.time.LocalDate.now());
         return userRepository.save(user);
     }
@@ -38,12 +35,13 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public User updateUser(Long id, UserDTO userDTO) {
+    public User updateUser(Long id, User newUserData) {
         User existing = getUserById(id);
-        existing.setUsername(userDTO.getUsername());
-        existing.setEmail(userDTO.getEmail());
-        existing.setDateOfBirth(userDTO.getDateOfBirth());
-        // aggiorna altri campi se necessario
+
+        existing.setUsername(newUserData.getUsername());
+        existing.setEmail(newUserData.getEmail());
+        existing.setDateOfBirth(newUserData.getDateOfBirth());
+
         return userRepository.save(existing);
     }
 
