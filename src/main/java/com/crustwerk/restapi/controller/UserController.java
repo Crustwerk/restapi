@@ -1,10 +1,7 @@
 package com.crustwerk.restapi.controller;
 
 import com.crustwerk.restapi.assembler.UserAssembler;
-import com.crustwerk.restapi.dto.CreateUserResponse;
-import com.crustwerk.restapi.dto.GetUserResponse;
-import com.crustwerk.restapi.dto.CreateUserRequest;
-import com.crustwerk.restapi.dto.UpdateUserRequest;
+import com.crustwerk.restapi.dto.*;
 import com.crustwerk.restapi.mapper.UserMapper;
 import com.crustwerk.restapi.model.User;
 import com.crustwerk.restapi.service.UserService;
@@ -79,9 +76,14 @@ public class UserController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id, @Valid @RequestBody DeleteUserRequest request) {
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("Password and Confirm Password do not match");
+        }
+
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
     // Puoi aggiungere altri endpoint (update, deletce...) in modo simile
 }
