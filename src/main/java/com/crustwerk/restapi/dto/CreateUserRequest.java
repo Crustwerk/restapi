@@ -2,6 +2,7 @@ package com.crustwerk.restapi.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class CreateUserRequest {
 
@@ -9,6 +10,7 @@ public class CreateUserRequest {
     private String username;
 
     @Email(message = "Invalid email format")
+    @NotBlank(message = "Email is required")
     private String email;
 
     @NotBlank(message = "Password is required")
@@ -16,7 +18,7 @@ public class CreateUserRequest {
 
     @NotBlank(message = "Confirm password is required")
     private String confirmPassword;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotBlank(message = "Date of birth is required")
     private String dateOfBirth; //YYYY-MM-DD
 
