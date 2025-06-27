@@ -41,6 +41,7 @@ public class UserMapper {
         response.setId(user.getId());
         response.setUsername(user.getUsername());
         response.setEmail(user.getEmail());
+        response.setDateOfBirth(user.getDateOfBirth().toString());
         return response;
     }
 
@@ -51,6 +52,7 @@ public class UserMapper {
         response.setId(user.getId());
         response.setUsername(user.getUsername());
         response.setEmail(user.getEmail());
+        response.setDateOfBirth(user.getDateOfBirth().toString());
         return response;
     }
 }
