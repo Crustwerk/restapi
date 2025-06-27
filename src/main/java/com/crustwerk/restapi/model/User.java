@@ -24,6 +24,7 @@ public class User {
 
     private LocalDate createdAt;
 
+    private LocalDate lastUpdateAt;
 
     public Long getId() {
         return id;
@@ -71,5 +72,13 @@ public class User {
 
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDate getLastUpdateAt() {
+        return lastUpdateAt;
+    }
+
+    public void setLastUpdateAt(LocalDate lastUpdateAt) {
+        this.lastUpdateAt = lastUpdateAt;
     }
 }

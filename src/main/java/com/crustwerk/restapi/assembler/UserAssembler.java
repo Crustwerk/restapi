@@ -23,6 +23,7 @@ public class UserAssembler {
 
     public User prepareForUpdate(User user, String rawPassword) {
         user.setPasswordHash(passwordEncoder.encode(rawPassword));
+        user.setLastUpdateAt(LocalDate.now());
         return user;
     }
 

@@ -58,7 +58,7 @@ public class UserController {
         User ready = userAssembler.prepareForCreation(base, req.getPassword());
         User saved = userService.createUser(ready);
         CreateUserResponse response = userMapper.toCreateUserResponse(base);
-        URI location = URI.create(endPoint + saved.getId());
+        URI location = URI.create(endPoint + "/" + saved.getId());
         return ResponseEntity.created(location).body(response);
     }
 
