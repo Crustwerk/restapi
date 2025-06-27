@@ -18,6 +18,7 @@ public class UserAssembler {
     public User prepareForCreation(User user, String rawPassword) {
         user.setPasswordHash(passwordEncoder.encode(rawPassword));
         user.setCreatedAt(LocalDate.now());
+        user.setLastUpdateAt(LocalDate.now());
         return user;
     }
 
