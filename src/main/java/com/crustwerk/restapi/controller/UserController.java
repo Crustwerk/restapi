@@ -6,19 +6,36 @@ import com.crustwerk.restapi.mapper.UserMapper;
 import com.crustwerk.restapi.model.User;
 import com.crustwerk.restapi.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.crustwerk.restapi.controller.UserController.endPoint;
+
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping(endPoint)
+
+/*
+
+Validated
+  Fa parte del framework Spring e si usa a livello di classe.
+  Serve per attivare le validazioni dei parametri primitivi (es. @PathVariable @Min(1) Long id) e la validazione a gruppi (avanzato, todo).
+
+Valid
+  Fa parte di jakarta (ex. javax).
+  Serve per attivare le validazioni definite nei bean, dunque si usa esclusivamente sui parametri di tipo oggetto (es. @Valid @RequestBody CreateUserRequest req)
+
+*/
+
 @Validated
 public class UserController {
 
+    public static final String endPoint = "/api/users";
     private final UserService userService;
     private final UserMapper userMapper;
     private final UserAssembler userAssembler;
@@ -29,8 +46,8 @@ public class UserController {
         this.userAssembler = userAssembler;
     }
 
-    //RequestBody fa sì che venga deserializzato il body e passato come parametro al metodo
-    //In sua assenza Spring si aspetta una query string (es.?username=mario&email=...)
+    // RequestBody fa sì che venga deserializzato il body e passato come parametro al metodo
+    // In sua assenza Spring si aspetta una query string (es.?username=mario&email=...)
     @PostMapping
     public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest req) {
         if (!req.getPassword().equals(req.getConfirmPassword())) {
@@ -41,7 +58,8 @@ public class UserController {
         User ready = userAssembler.prepareForCreation(base, req.getPassword());
         User saved = userService.createUser(ready);
         CreateUserResponse response = userMapper.toCreateUserResponse(base);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        URI location = URI.create(endPoint + saved.getId());
+        return ResponseEntity.created(location).body(response);
     }
 
     @GetMapping
@@ -56,7 +74,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GetUserResponse> getUserById(@PathVariable Long id) {
+    public ResponseEntity<GetUserResponse> getUserById(@PathVariable @Min(1) Long id) {
         User user = userService.getUserById(id);
         return ResponseEntity.ok(userMapper.toGetUserResponse(user));
     }
