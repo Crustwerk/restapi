@@ -1,4 +1,4 @@
-package com.crustwerk.restapi.dto;
+package com.crustwerk.restapi.dto.user.request;
 
 import jakarta.validation.constraints.NotBlank;
 

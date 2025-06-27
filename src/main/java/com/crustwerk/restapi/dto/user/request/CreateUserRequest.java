@@ -1,8 +1,12 @@
-package com.crustwerk.restapi.dto;
+package com.crustwerk.restapi.dto.user.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+
+import java.time.LocalDate;
 
 public class CreateUserRequest {
 
@@ -18,9 +22,10 @@ public class CreateUserRequest {
 
     @NotBlank(message = "Confirm password is required")
     private String confirmPassword;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotBlank(message = "Date of birth is required")
-    private String dateOfBirth; //YYYY-MM-DD
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "Date of birth is required")
+    @Past(message = "Date of birth must be in the past")
+    private LocalDate dateOfBirth; //YYYY-MM-DD
 
     public String getUsername() {
         return username;
@@ -54,11 +59,11 @@ public class CreateUserRequest {
         this.confirmPassword = confirmPassword;
     }
 
-    public String getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 }

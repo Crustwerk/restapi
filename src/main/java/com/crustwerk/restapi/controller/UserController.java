@@ -1,7 +1,11 @@
 package com.crustwerk.restapi.controller;
 
 import com.crustwerk.restapi.assembler.UserAssembler;
-import com.crustwerk.restapi.dto.*;
+import com.crustwerk.restapi.dto.user.request.CreateUserRequest;
+import com.crustwerk.restapi.dto.user.request.DeleteUserRequest;
+import com.crustwerk.restapi.dto.user.request.UpdateUserRequest;
+import com.crustwerk.restapi.dto.user.response.CreateUserResponse;
+import com.crustwerk.restapi.dto.user.response.GetUserResponse;
 import com.crustwerk.restapi.mapper.UserMapper;
 import com.crustwerk.restapi.model.User;
 import com.crustwerk.restapi.service.UserService;

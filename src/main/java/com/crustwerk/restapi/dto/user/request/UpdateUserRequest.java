@@ -1,8 +1,12 @@
-package com.crustwerk.restapi.dto;
+package com.crustwerk.restapi.dto.user.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+
+import java.time.LocalDate;
 
 public class UpdateUserRequest {
 
@@ -12,9 +16,10 @@ public class UpdateUserRequest {
     @Email(message = "Invalid email format")
     @NotBlank(message = "Email is required")
     private String email;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotBlank(message = "Date of birth is required")
-    private String dateOfBirth;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "Date of birth is required")
+    @Past(message = "Date of birth must be in the past")
+    private LocalDate dateOfBirth;
 
     @NotBlank(message = "Password is required")
     private String password;
@@ -60,11 +65,11 @@ public class UpdateUserRequest {
         this.email = email;
     }
 
-    public String getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

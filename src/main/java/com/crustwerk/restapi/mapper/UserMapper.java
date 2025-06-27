@@ -1,9 +1,9 @@
 package com.crustwerk.restapi.mapper;
 
-import com.crustwerk.restapi.dto.CreateUserResponse;
-import com.crustwerk.restapi.dto.GetUserResponse;
-import com.crustwerk.restapi.dto.CreateUserRequest;
-import com.crustwerk.restapi.dto.UpdateUserRequest;
+import com.crustwerk.restapi.dto.user.request.CreateUserRequest;
+import com.crustwerk.restapi.dto.user.request.UpdateUserRequest;
+import com.crustwerk.restapi.dto.user.response.CreateUserResponse;
+import com.crustwerk.restapi.dto.user.response.GetUserResponse;
 import com.crustwerk.restapi.model.User;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ public class UserMapper {
         User user = new User();
         user.setUsername(createUserRequest.getUsername());
         user.setEmail(createUserRequest.getEmail());
-        user.setDateOfBirth(LocalDate.parse(createUserRequest.getDateOfBirth()));
+        user.setDateOfBirth(createUserRequest.getDateOfBirth());
         return user;
     }
 
@@ -30,7 +30,7 @@ public class UserMapper {
         User user = new User();
         user.setUsername(updateUserRequest.getUsername());
         user.setEmail(updateUserRequest.getEmail());
-        user.setDateOfBirth(LocalDate.parse(updateUserRequest.getDateOfBirth()));
+        user.setDateOfBirth(updateUserRequest.getDateOfBirth());
         return user;
     }
 
@@ -41,7 +41,7 @@ public class UserMapper {
         response.setId(user.getId());
         response.setUsername(user.getUsername());
         response.setEmail(user.getEmail());
-        response.setDateOfBirth(user.getDateOfBirth().toString());
+        response.setDateOfBirth(user.getDateOfBirth());
         return response;
     }
 
@@ -52,7 +52,7 @@ public class UserMapper {
         response.setId(user.getId());
         response.setUsername(user.getUsername());
         response.setEmail(user.getEmail());
-        response.setDateOfBirth(user.getDateOfBirth().toString());
+        response.setDateOfBirth(user.getDateOfBirth());
         return response;
     }
 }
