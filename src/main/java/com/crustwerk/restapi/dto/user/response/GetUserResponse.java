@@ -1,11 +1,15 @@
-package com.crustwerk.restapi.dto;
+package com.crustwerk.restapi.dto.user.response;
 
-public class CreateUserResponse {
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.time.LocalDate;
+
+public class GetUserResponse {
     private Long id;
     private String username;
     private String email;
-    private String dateOfBirth;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateOfBirth;
 
     public Long getId() {
         return id;
@@ -31,11 +35,13 @@ public class CreateUserResponse {
         this.email = email;
     }
 
-    public String getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
+
+    // getters & setters
 }
