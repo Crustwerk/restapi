@@ -22,7 +22,6 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        user.setCreatedAt(java.time.LocalDate.now());
         return userRepository.save(user);
     }
 
