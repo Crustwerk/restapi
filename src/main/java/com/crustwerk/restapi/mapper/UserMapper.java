@@ -10,6 +10,13 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Responsabile della conversione semplice e diretta tra DTO e entità User (e viceversa).
+ * Esegue il mapping campo per campo senza applicare logica di dominio né arricchimenti.
+ * Viene usato esclusivamente nei controller per trasformare dati in ingresso e in uscita.
+ */
+
+
 @Component
 public class UserMapper {
 

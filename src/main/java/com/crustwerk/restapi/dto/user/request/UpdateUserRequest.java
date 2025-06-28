@@ -16,6 +16,7 @@ public class UpdateUserRequest {
     @Email(message = "Invalid email format")
     @NotBlank(message = "Email is required")
     private String email;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Date of birth is required")
     @Past(message = "Date of birth must be in the past")
@@ -26,10 +27,12 @@ public class UpdateUserRequest {
 
     @NotBlank(message = "Confirm password is required")
     private String confirmPassword;
-    // Se l'utente vuole cambiare la password
-    private String currentPassword;       // password attuale (per verifica)
-    private String newPassword;           // nuova password
-    private String confirmNewPassword;    // conferma nuova password
+
+    private String currentPassword;
+
+    private String newPassword;
+
+    private String confirmNewPassword;
 
     public String getPassword() {
         return password;

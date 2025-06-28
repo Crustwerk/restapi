@@ -21,21 +21,27 @@ import java.util.List;
 
 import static com.crustwerk.restapi.controller.UserController.endPoint;
 
-@RestController
-@RequestMapping(endPoint)
+/**
 
-/*
+ @@Validated
+    Fa parte del framework Spring e si usa a livello di classe.
+    Serve per attivare le validazioni dei parametri primitivi (es. @PathVariable @Min(1) Long id) e la validazione a gruppi (avanzato, todo).
 
-Validated
-  Fa parte del framework Spring e si usa a livello di classe.
-  Serve per attivare le validazioni dei parametri primitivi (es. @PathVariable @Min(1) Long id) e la validazione a gruppi (avanzato, todo).
+ @@Valid
+    Fa parte di jakarta (ex. javax).
+    Serve per attivare le validazioni definite nei bean, dunque si usa esclusivamente sui parametri di tipo oggetto (es. @Valid @RequestBody CreateUserRequest req)
 
-Valid
-  Fa parte di jakarta (ex. javax).
-  Serve per attivare le validazioni definite nei bean, dunque si usa esclusivamente sui parametri di tipo oggetto (es. @Valid @RequestBody CreateUserRequest req)
+ @Controller
+    Espone gli endpoint REST relativi all'entità User.
+    Si occupa esclusivamente di ricevere richieste dal client (DTO in ingresso),
+    orchestrare le chiamate a Mapper, Assembler e Service,
+    e restituire le risposte (DTO in uscita).
+    Non contiene logica di dominio né costruzione diretta di entità.
 
 */
 
+@RestController
+@RequestMapping(endPoint)
 @Validated
 public class UserController {
 
@@ -50,8 +56,12 @@ public class UserController {
         this.userAssembler = userAssembler;
     }
 
-    // RequestBody fa sì che venga deserializzato il body e passato come parametro al metodo
-    // In sua assenza Spring si aspetta una query string (es.?username=mario&email=...)
+
+
+    /**
+     * @@RequestBody Fa sì che venga deserializzato il body e passato come parametro al metodo
+     * In sua assenza Spring si aspetta una query string (es.?username=mario&email=...)
+     */
     @PostMapping
     public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest req) {
         if (!req.getPassword().equals(req.getConfirmPassword())) {
@@ -61,7 +71,7 @@ public class UserController {
         User base = userMapper.toModel(req);
         User ready = userAssembler.prepareForCreation(base, req.getPassword());
         User saved = userService.createUser(ready);
-        CreateUserResponse response = userMapper.toCreateUserResponse(base);
+        CreateUserResponse response = userMapper.toCreateUserResponse(saved);
         URI location = URI.create(endPoint + "/" + saved.getId());
         return ResponseEntity.created(location).body(response);
     }
