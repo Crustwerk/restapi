@@ -1,12 +1,25 @@
 package com.crustwerk.restapi.service;
 
+import com.crustwerk.restapi.exception.EmailAlreadyUsedException;
+import com.crustwerk.restapi.exception.UnderageUserException;
 import com.crustwerk.restapi.mapper.UserMapper;
 import com.crustwerk.restapi.model.User;
 import com.crustwerk.restapi.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
+
+/**
+ * Contiene la logica di dominio relativa agli utenti.
+ * Applica le regole del business (es. verifiche, vincoli, stati),
+ * coordina le operazioni con il repository e gestisce la persistenza.
+ * Riceve entità già pronte all'uso (costruite tramite Mapper e Assembler),
+ * e non ha conoscenza diretta dei DTO.
+ */
+
 
 @Service
 public class UserService {
@@ -22,6 +35,15 @@ public class UserService {
     }
 
     public User createUser(User user) {
+        if (userRepository.existsByEmail(user.getEmail())){
+            throw new EmailAlreadyUsedException();
+        }
+
+        if (Period.between(user.getDateOfBirth(), LocalDate.now()).getYears() < 18) {
+            throw new UnderageUserException();
+        }
+
+
         return userRepository.save(user);
     }
 

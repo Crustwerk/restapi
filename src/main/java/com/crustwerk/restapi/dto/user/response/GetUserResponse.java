@@ -5,9 +5,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 
 public class GetUserResponse {
+
     private Long id;
+
     private String username;
+
     private String email;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 

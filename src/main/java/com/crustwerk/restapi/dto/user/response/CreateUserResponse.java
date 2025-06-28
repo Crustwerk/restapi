@@ -7,8 +7,11 @@ import java.time.LocalDate;
 public class CreateUserResponse {
 
     private Long id;
+
     private String username;
+
     private String email;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
