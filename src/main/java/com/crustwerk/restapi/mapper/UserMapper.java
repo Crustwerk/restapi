@@ -20,8 +20,6 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class UserMapper {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
-
     public User toModel(CreateUserRequest createUserRequest) {
         if (createUserRequest == null) return null;
 
