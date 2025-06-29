@@ -25,6 +25,7 @@ public class CreateUserRequest {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Date of birth is required")
     @Past(message = "Date of birth must be in the past")
+    //inserire qui validatore custom
     private LocalDate dateOfBirth; //YYYY-MM-DD
 
     public String getUsername() {

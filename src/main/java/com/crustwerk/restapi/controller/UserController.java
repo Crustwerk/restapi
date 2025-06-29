@@ -18,7 +18,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.crustwerk.restapi.controller.UserController.endPoint;
+import static com.crustwerk.restapi.controller.UserController.USER_ENDPOINT;
 
 /**
  * @@Validated Fa parte del framework Spring e si usa a livello di classe.
@@ -33,11 +33,11 @@ import static com.crustwerk.restapi.controller.UserController.endPoint;
  */
 
 @RestController
-@RequestMapping(endPoint)
+@RequestMapping(USER_ENDPOINT)
 @Validated
 public class UserController {
 
-    public static final String endPoint = "/api/users";
+    public static final String USER_ENDPOINT = "/api/users";
     private final UserService userService;
     private final UserMapper userMapper;
 
@@ -60,7 +60,7 @@ public class UserController {
         User user = userMapper.toModel(req);
         User saved = userService.createUser(user, req.getPassword());
         CreateUserResponse response = userMapper.toCreateUserResponse(saved);
-        URI location = URI.create(endPoint + "/" + saved.getId());
+        URI location = URI.create(USER_ENDPOINT + "/" + saved.getId());
         return ResponseEntity.created(location).body(response);
     }
 

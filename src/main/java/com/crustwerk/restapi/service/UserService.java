@@ -2,7 +2,6 @@ package com.crustwerk.restapi.service;
 
 import com.crustwerk.restapi.exception.EmailAlreadyUsedException;
 import com.crustwerk.restapi.exception.UnderageUserException;
-import com.crustwerk.restapi.mapper.UserMapper;
 import com.crustwerk.restapi.model.User;
 import com.crustwerk.restapi.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,25 +19,23 @@ import java.util.List;
  * e non ha conoscenza diretta dei DTO.
  */
 
-
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
     public User createUser(User user, String rawPassword) {
-        if (userRepository.existsByEmail(user.getEmail())){
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyUsedException();
         }
 
+        //TODO: spostare su validatore custom
         if (Period.between(user.getDateOfBirth(), LocalDate.now()).getYears() < 18) {
             throw new UnderageUserException();
         }
