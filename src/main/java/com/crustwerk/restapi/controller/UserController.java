@@ -1,6 +1,5 @@
 package com.crustwerk.restapi.controller;
 
-import com.crustwerk.restapi.assembler.UserAssembler;
 import com.crustwerk.restapi.dto.user.request.CreateUserRequest;
 import com.crustwerk.restapi.dto.user.request.DeleteUserRequest;
 import com.crustwerk.restapi.dto.user.request.UpdateUserRequest;
@@ -22,23 +21,16 @@ import java.util.List;
 import static com.crustwerk.restapi.controller.UserController.endPoint;
 
 /**
-
- @@Validated
-    Fa parte del framework Spring e si usa a livello di classe.
-    Serve per attivare le validazioni dei parametri primitivi (es. @PathVariable @Min(1) Long id) e la validazione a gruppi (avanzato, todo).
-
- @@Valid
-    Fa parte di jakarta (ex. javax).
-    Serve per attivare le validazioni definite nei bean, dunque si usa esclusivamente sui parametri di tipo oggetto (es. @Valid @RequestBody CreateUserRequest req)
-
- @Controller
-    Espone gli endpoint REST relativi all'entità User.
-    Si occupa esclusivamente di ricevere richieste dal client (DTO in ingresso),
-    orchestrare le chiamate a Mapper, Assembler e Service,
-    e restituire le risposte (DTO in uscita).
-    Non contiene logica di dominio né costruzione diretta di entità.
-
-*/
+ * @@Validated Fa parte del framework Spring e si usa a livello di classe.
+ * Serve per attivare le validazioni dei parametri primitivi (es. @PathVariable @Min(1) Long id) e la validazione a gruppi (avanzato, todo).
+ * @@Valid Fa parte di jakarta (ex. javax).
+ * Serve per attivare le validazioni definite nei bean, dunque si usa esclusivamente sui parametri di tipo oggetto (es. @Valid @RequestBody CreateUserRequest req)
+ * @Controller Espone gli endpoint REST relativi all'entità User.
+ * Si occupa esclusivamente di ricevere richieste dal client (DTO in ingresso),
+ * orchestrare le chiamate a Mapper, Assembler e Service,
+ * e restituire le risposte (DTO in uscita).
+ * Non contiene logica di dominio né costruzione diretta di entità.
+ */
 
 @RestController
 @RequestMapping(endPoint)
@@ -48,14 +40,11 @@ public class UserController {
     public static final String endPoint = "/api/users";
     private final UserService userService;
     private final UserMapper userMapper;
-    private final UserAssembler userAssembler;
 
-    public UserController(UserService userService, UserMapper userMapper, UserAssembler userAssembler) {
+    public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
-        this.userAssembler = userAssembler;
     }
-
 
 
     /**
@@ -68,9 +57,8 @@ public class UserController {
             throw new IllegalArgumentException("Password and Confirm Password do not match");
         }
 
-        User base = userMapper.toModel(req);
-        User ready = userAssembler.prepareForCreation(base, req.getPassword());
-        User saved = userService.createUser(ready);
+        User user = userMapper.toModel(req);
+        User saved = userService.createUser(user, req.getPassword());
         CreateUserResponse response = userMapper.toCreateUserResponse(saved);
         URI location = URI.create(endPoint + "/" + saved.getId());
         return ResponseEntity.created(location).body(response);
@@ -99,9 +87,8 @@ public class UserController {
             throw new IllegalArgumentException("Password and Confirm Password do not match");
         }
 
-        User base = userMapper.toModel(request);
-        User ready = userAssembler.prepareForUpdate(base, request.getPassword());
-        User updatedUser = userService.updateUser(id, ready);
+        User user = userMapper.toModel(request);
+        User updatedUser = userService.updateUser(id, user, request.getPassword());
 
         return ResponseEntity.ok(userMapper.toGetUserResponse(updatedUser));
     }

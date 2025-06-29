@@ -34,7 +34,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User createUser(User user) {
+    public User createUser(User user, String rawPassword) {
         if (userRepository.existsByEmail(user.getEmail())){
             throw new EmailAlreadyUsedException();
         }
@@ -43,6 +43,10 @@ public class UserService {
             throw new UnderageUserException();
         }
 
+        user.setPasswordHash(passwordEncoder.encode(rawPassword));
+        LocalDate now = LocalDate.now();
+        user.setCreatedAt(now);
+        user.setLastUpdateAt(now);
 
         return userRepository.save(user);
     }
@@ -56,12 +60,14 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public User updateUser(Long id, User newUserData) {
+    public User updateUser(Long id, User newUserData, String rawPassword) {
         User existing = getUserById(id);
 
         existing.setUsername(newUserData.getUsername());
         existing.setEmail(newUserData.getEmail());
         existing.setDateOfBirth(newUserData.getDateOfBirth());
+        existing.setLastUpdateAt(LocalDate.now());
+        existing.setPasswordHash(passwordEncoder.encode(rawPassword));
 
         return userRepository.save(existing);
     }
@@ -69,7 +75,4 @@ public class UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
-
-
-    // Altri metodi come update, delete, etc
 }
