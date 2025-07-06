@@ -1,0 +1,22 @@
+spring:
+  application.name: restapi
+  datasource:
+    url: jdbc:h2:mem:restapi
+    username: user
+    password: pass
+    generate-unique-name: false
+    name: "restapi"
+  jpa:
+    hibernate.ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+  sql.init.mode: always
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    com.crustwerk.restapi: DEBUG
+    root: INFO
+
