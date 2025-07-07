@@ -75,6 +75,7 @@ public class UserController {
         return ResponseEntity.ok(dtos);
     }
 
+    //TODO adeguare a SubscriptionController (Optional)
     @GetMapping("/{id}")
     public ResponseEntity<GetUserResponse> getUserById(@PathVariable @Min(1) Long id) {
         User user = userService.getUserById(id);

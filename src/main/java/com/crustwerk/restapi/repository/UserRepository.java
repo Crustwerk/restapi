@@ -4,7 +4,7 @@ import com.crustwerk.restapi.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-/*
+/**
     Spring Data JPA è una parte del progetto Spring Data.
 
         - Spring Data è un framework che semplifica l'accesso ai dati,
