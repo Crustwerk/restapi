@@ -13,7 +13,7 @@ public class Subscription {
 
     private LocalDate start;
     private LocalDate end;
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private SubscriptionTier subscriptionTier;
     @Enumerated(EnumType.STRING)
     private SubscriptionDuration subscriptionDuration;

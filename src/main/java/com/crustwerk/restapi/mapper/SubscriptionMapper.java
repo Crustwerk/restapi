@@ -16,7 +16,6 @@ public class SubscriptionMapper {
     public Subscription toModel(CreateSubscriptionRequest req) {
         if (req == null) return null;
 
-
         Subscription subscription = new Subscription();
         subscription.setSubscriptionTier(req.subscriptionTier());
         subscription.setSubscriptionDuration(req.subscriptionDuration());

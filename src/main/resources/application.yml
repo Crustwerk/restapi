@@ -11,6 +11,9 @@ spring:
     show-sql: true
     properties:
       hibernate:
+        #Grazie alla configurazione sottostante le @Entity vengono salvate su DB in minuscolo.
+        #Per referenziare nelle query bisogna usare le virgolette (es. SELECT * FROM "subscription")
+        #altrimenti vengono parsate automaticamente in maiuscolo (USER, SUBSCRIPTION)
         globally_quoted_identifiers: true
   sql.init.mode: always
 
@@ -19,4 +22,3 @@ logging:
     org.springframework.web: DEBUG
     com.crustwerk.restapi: DEBUG
     root: INFO
-
