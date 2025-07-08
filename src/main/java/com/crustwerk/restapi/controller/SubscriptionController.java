@@ -50,17 +50,7 @@ public class SubscriptionController {
 
     @GetMapping
     public ResponseEntity<List<Subscription>> getSubscriptionsBetweenDates(@Valid @RequestBody GetSubscriptionBetweenDatesRequest req) {
-         List<Subscription> subscriptions = subscriptionService.getSubscriptionBetweenDates(req.getStart(), req.getEnd());
-         return ResponseEntity.ok(subscriptions);
+        List<Subscription> subscriptions = subscriptionService.getSubscriptionBetweenDates(req.start(), req.end());
+        return ResponseEntity.ok(subscriptions);
     }
-
-
-
-
-    /*
-     * 1. createSubscription OK
-     * 2. getById OK
-     * 3. getBetweenDates
-     * */
-
 }

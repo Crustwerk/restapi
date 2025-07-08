@@ -46,19 +46,18 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
-
     /**
      * @@RequestBody Fa sì che venga deserializzato il body e passato come parametro al metodo
      * In sua assenza Spring si aspetta una query string (es.?username=mario&email=...)
      */
     @PostMapping
     public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest req) {
-        if (!req.getPassword().equals(req.getConfirmPassword())) {
+        if (!req.password().equals(req.confirmPassword())) {
             throw new IllegalArgumentException("Password and Confirm Password do not match");
         }
 
         User user = userMapper.toModel(req);
-        User saved = userService.createUser(user, req.getPassword());
+        User saved = userService.createUser(user, req.password());
         CreateUserResponse response = userMapper.toCreateUserResponse(saved);
         URI location = URI.create(USER_ENDPOINT + "/" + saved.getId());
         return ResponseEntity.created(location).body(response);
@@ -84,26 +83,23 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<GetUserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest request) {
-        if (!request.getPassword().equals(request.getConfirmPassword())) {
+        if (!request.password().equals(request.confirmPassword())) {
             throw new IllegalArgumentException("Password and Confirm Password do not match");
         }
 
         User user = userMapper.toModel(request);
-        User updatedUser = userService.updateUser(id, user, request.getPassword());
+        User updatedUser = userService.updateUser(id, user, request.password());
 
         return ResponseEntity.ok(userMapper.toGetUserResponse(updatedUser));
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id, @Valid @RequestBody DeleteUserRequest request) {
-        if (!request.getPassword().equals(request.getConfirmPassword())) {
+        if (!request.password().equals(request.confirmPassword())) {
             throw new IllegalArgumentException("Password and Confirm Password do not match");
         }
 
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
-
-    // Puoi aggiungere altri endpoint (update, deletce...) in modo simile
 }

@@ -3,20 +3,23 @@ package com.crustwerk.restapi.mapper;
 import com.crustwerk.restapi.dto.subscription.request.CreateSubscriptionRequest;
 import com.crustwerk.restapi.dto.subscription.request.GetSubscriptionBetweenDatesRequest;
 import com.crustwerk.restapi.dto.subscription.response.CreateSubscriptionResponse;
-import com.crustwerk.restapi.dto.subscription.response.CreateSubscriptionResponseBuilder;
 import com.crustwerk.restapi.dto.subscription.response.GetSubscriptionResponse;
 import com.crustwerk.restapi.model.Subscription;
 import org.springframework.stereotype.Component;
 
+import static com.crustwerk.restapi.dto.subscription.response.CreateSubscriptionResponse.CreateSubscriptionResponseBuilder;
+import static com.crustwerk.restapi.dto.subscription.response.GetSubscriptionResponse.GetSubscriptionResponseBuilder;
+
 @Component
 public class SubscriptionMapper {
 
-    public Subscription toModel(CreateSubscriptionRequest createSubscriptionRequest) {
-        if (createSubscriptionRequest == null) return null;
+    public Subscription toModel(CreateSubscriptionRequest req) {
+        if (req == null) return null;
+
 
         Subscription subscription = new Subscription();
-        subscription.setSubscriptionTier(createSubscriptionRequest.getSubscriptionTier());
-        subscription.setSubscriptionDuration(createSubscriptionRequest.getSubscriptionDuration());
+        subscription.setSubscriptionTier(req.subscriptionTier());
+        subscription.setSubscriptionDuration(req.subscriptionDuration());
         return subscription;
     }
 
@@ -24,35 +27,33 @@ public class SubscriptionMapper {
         if (req == null) return null;
 
         Subscription subscription = new Subscription();
-        subscription.setStart(req.getStart());
-        subscription.setEnd(req.getEnd());
+        subscription.setStart(req.start());
+        subscription.setEnd(req.end());
         return subscription;
     }
-
 
     public CreateSubscriptionResponse toCreateSubscriptionResponse(Subscription subscription) {
         if (subscription == null) return null;
 
         return CreateSubscriptionResponseBuilder
                 .aCreateSubscriptionResponse()
-                .id(subscription.getId())
-                .start(subscription.getStart())
-                .end(subscription.getEnd())
-                .subscriptionTier(subscription.getSubscriptionTier())
-                .subscriptionDuration(subscription.getSubscriptionDuration())
+                .withId(subscription.getId())
+                .withStart(subscription.getStart())
+                .withEnd(subscription.getEnd())
+                .withSubscriptionTier(subscription.getSubscriptionTier())
+                .withSubscriptionDuration(subscription.getSubscriptionDuration())
                 .build();
     }
 
     public GetSubscriptionResponse toGetSubscriptionResponse(Subscription subscription) {
         if (subscription == null) return null;
 
-        GetSubscriptionResponse response = new GetSubscriptionResponse();
-        response.setEnd(subscription.getEnd());
-        response.setStart(subscription.getStart());
-        response.setSubscriptionTier(subscription.getSubscriptionTier());
-        response.setSubscriptionDuration(subscription.getSubscriptionDuration());
-        return response;
+        return GetSubscriptionResponseBuilder
+                .aGetSubscriptionResponse()
+                .withEnd(subscription.getEnd())
+                .withStart(subscription.getStart())
+                .withSubscriptionTier(subscription.getSubscriptionTier())
+                .withSubscriptionDuration(subscription.getSubscriptionDuration())
+                .build();
     }
-
-
 }
