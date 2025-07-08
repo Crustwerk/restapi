@@ -8,6 +8,7 @@ import com.crustwerk.restapi.mapper.SubscriptionMapper;
 import com.crustwerk.restapi.model.Subscription;
 import com.crustwerk.restapi.service.SubscriptionService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +16,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-import static com.crustwerk.restapi.controller.SubscriptionController.SUBSCRIPTION_ENDPOINT;
-
 
 @RestController
-@RequestMapping(SUBSCRIPTION_ENDPOINT)
+@RequestMapping("/api/subscriptions")
 @Validated
 public class SubscriptionController {
-    public static final String SUBSCRIPTION_ENDPOINT = "/api/subscriptions";
+
     private final SubscriptionService subscriptionService;
     private final SubscriptionMapper subscriptionMapper;
 
@@ -37,7 +36,7 @@ public class SubscriptionController {
         Subscription saved = subscriptionService.createSubscription(subscription);
 
         CreateSubscriptionResponse response = subscriptionMapper.toCreateSubscriptionResponse(saved);
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

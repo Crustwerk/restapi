@@ -10,15 +10,13 @@ import com.crustwerk.restapi.model.User;
 import com.crustwerk.restapi.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.crustwerk.restapi.controller.UserController.USER_ENDPOINT;
 
 /**
  * @@Validated Fa parte del framework Spring e si usa a livello di classe.
@@ -33,11 +31,10 @@ import static com.crustwerk.restapi.controller.UserController.USER_ENDPOINT;
  */
 
 @RestController
-@RequestMapping(USER_ENDPOINT)
+@RequestMapping("/api/users")
 @Validated
 public class UserController {
 
-    public static final String USER_ENDPOINT = "/api/users";
     private final UserService userService;
     private final UserMapper userMapper;
 
@@ -59,8 +56,7 @@ public class UserController {
         User user = userMapper.toModel(req);
         User saved = userService.createUser(user, req.password());
         CreateUserResponse response = userMapper.toCreateUserResponse(saved);
-        URI location = URI.create(USER_ENDPOINT + "/" + saved.getId());
-        return ResponseEntity.created(location).body(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping
