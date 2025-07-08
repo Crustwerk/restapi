@@ -5,34 +5,52 @@ import com.crustwerk.restapi.model.SubscriptionTier;
 
 import java.time.LocalDate;
 
-/**
- * Questo record rappresenta un DTO (Data Transfer Object) immutabile.
- *
- * La keyword {@code record}, introdotta in Java 16, definisce una classe compatta e finalizzata
- * alla gestione di dati "puri", come richieste o risposte REST, coppie chiave/valore, o configurazioni.
- *
- * Caratteristiche principali:
- * - I campi sono finali e immutabili per design
- * - Vengono generati automaticamente:
- *   - costruttore
- *   - metodi accessori ({@code fieldName()})
- *   - {@code equals()}, {@code hashCode()}, {@code toString()}
- * - Perfetto per DTO, semplice da leggere e manutenere
- *
- * ⚠️ Non adatto per:
- * - Entity JPA (a causa della mutabilità e del supporto limitato)
- * - Classi con logica complessa o stato variabile
- *
- * Esempio d’uso nel controller:
- * {@code
- *     public record CreateUserRequest(String name, String email) {}
- * }
- *
- * NB: usare record unicamente per DTO in ingresso. In uscita usare record solo se il DTO ha pochi campi,
- * altrimenti usare una classe standard (l'alternativa è fare un builder ma si rischia di avere più codice di prima).
- */
 
 public record CreateSubscriptionResponse(Long id, LocalDate start, LocalDate end, SubscriptionTier subscriptionTier,
                                          SubscriptionDuration subscriptionDuration) {
+
+    public static final class CreateSubscriptionResponseBuilder {
+        private Long id;
+        private LocalDate start;
+        private LocalDate end;
+        private SubscriptionTier subscriptionTier;
+        private SubscriptionDuration subscriptionDuration;
+
+        private CreateSubscriptionResponseBuilder() {
+        }
+
+        public static CreateSubscriptionResponseBuilder aCreateSubscriptionResponse() {
+            return new CreateSubscriptionResponseBuilder();
+        }
+
+        public CreateSubscriptionResponseBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public CreateSubscriptionResponseBuilder withStart(LocalDate start) {
+            this.start = start;
+            return this;
+        }
+
+        public CreateSubscriptionResponseBuilder withEnd(LocalDate end) {
+            this.end = end;
+            return this;
+        }
+
+        public CreateSubscriptionResponseBuilder withSubscriptionTier(SubscriptionTier subscriptionTier) {
+            this.subscriptionTier = subscriptionTier;
+            return this;
+        }
+
+        public CreateSubscriptionResponseBuilder withSubscriptionDuration(SubscriptionDuration subscriptionDuration) {
+            this.subscriptionDuration = subscriptionDuration;
+            return this;
+        }
+
+        public CreateSubscriptionResponse build() {
+            return new CreateSubscriptionResponse(id, start, end, subscriptionTier, subscriptionDuration);
+        }
+    }
 }
 

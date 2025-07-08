@@ -2,26 +2,36 @@ package com.crustwerk.restapi.dto.user.request;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class DeleteUserRequest {
-    @NotBlank(message = "Password is required")
-    private String password;
+public record DeleteUserRequest(
 
-    @NotBlank(message = "Confirm password is required")
-    private String confirmPassword;
+        @NotBlank(message = "Password is required")
+        String password,
 
-    public String getPassword() {
-        return password;
-    }
+        @NotBlank(message = "Confirm password is required")
+        String confirmPassword) {
+    public static final class DeleteUserRequestBuilder {
+        private String password;
+        private String confirmPassword;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+        private DeleteUserRequestBuilder() {
+        }
 
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
+        public static DeleteUserRequestBuilder aDeleteUserRequest() {
+            return new DeleteUserRequestBuilder();
+        }
 
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
+        public DeleteUserRequestBuilder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public DeleteUserRequestBuilder withConfirmPassword(String confirmPassword) {
+            this.confirmPassword = confirmPassword;
+            return this;
+        }
+
+        public DeleteUserRequest build() {
+            return new DeleteUserRequest(password, confirmPassword);
+        }
     }
 }

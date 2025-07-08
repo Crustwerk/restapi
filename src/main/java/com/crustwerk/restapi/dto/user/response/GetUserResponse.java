@@ -4,48 +4,52 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
 
-public class GetUserResponse {
+public record GetUserResponse(
 
-    private Long id;
+        Long id,
 
-    private String username;
+        String username,
 
-    private String email;
+        String email,
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dateOfBirth;
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        LocalDate dateOfBirth
+) {
+    public static final class GetUserResponseBuilder {
+        private Long id;
+        private String username;
+        private String email;
+        private LocalDate dateOfBirth;
 
-    public Long getId() {
-        return id;
+        private GetUserResponseBuilder() {
+        }
+
+        public static GetUserResponseBuilder aGetUserResponse() {
+            return new GetUserResponseBuilder();
+        }
+
+        public GetUserResponseBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public GetUserResponseBuilder withUsername(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public GetUserResponseBuilder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public GetUserResponseBuilder withDateOfBirth(LocalDate dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
+            return this;
+        }
+
+        public GetUserResponse build() {
+            return new GetUserResponse(id, username, email, dateOfBirth);
+        }
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    // getters & setters
 }

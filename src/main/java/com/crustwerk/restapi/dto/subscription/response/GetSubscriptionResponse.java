@@ -5,42 +5,45 @@ import com.crustwerk.restapi.model.SubscriptionTier;
 
 import java.time.LocalDate;
 
-public class GetSubscriptionResponse {
+public record GetSubscriptionResponse(LocalDate start, LocalDate end, SubscriptionTier subscriptionTier,
+                                      SubscriptionDuration subscriptionDuration) {
 
-    private LocalDate start;
-    private LocalDate end;
-    private SubscriptionTier subscriptionTier;
-    private SubscriptionDuration subscriptionDuration;
 
-    public LocalDate getStart() {
-        return start;
-    }
+    public static final class GetSubscriptionResponseBuilder {
+        private LocalDate start;
+        private LocalDate end;
+        private SubscriptionTier subscriptionTier;
+        private SubscriptionDuration subscriptionDuration;
 
-    public void setStart(LocalDate start) {
-        this.start = start;
-    }
+        private GetSubscriptionResponseBuilder() {
+        }
 
-    public LocalDate getEnd() {
-        return end;
-    }
+        public static GetSubscriptionResponseBuilder aGetSubscriptionResponse() {
+            return new GetSubscriptionResponseBuilder();
+        }
 
-    public void setEnd(LocalDate end) {
-        this.end = end;
-    }
+        public GetSubscriptionResponseBuilder withStart(LocalDate start) {
+            this.start = start;
+            return this;
+        }
 
-    public SubscriptionTier getSubscriptionTier() {
-        return subscriptionTier;
-    }
+        public GetSubscriptionResponseBuilder withEnd(LocalDate end) {
+            this.end = end;
+            return this;
+        }
 
-    public void setSubscriptionTier(SubscriptionTier subscriptionTier) {
-        this.subscriptionTier = subscriptionTier;
-    }
+        public GetSubscriptionResponseBuilder withSubscriptionTier(SubscriptionTier subscriptionTier) {
+            this.subscriptionTier = subscriptionTier;
+            return this;
+        }
 
-    public SubscriptionDuration getSubscriptionDuration() {
-        return subscriptionDuration;
-    }
+        public GetSubscriptionResponseBuilder withSubscriptionDuration(SubscriptionDuration subscriptionDuration) {
+            this.subscriptionDuration = subscriptionDuration;
+            return this;
+        }
 
-    public void setSubscriptionDuration(SubscriptionDuration subscriptionDuration) {
-        this.subscriptionDuration = subscriptionDuration;
+        public GetSubscriptionResponse build() {
+            return new GetSubscriptionResponse(start, end, subscriptionTier, subscriptionDuration);
+        }
     }
 }

@@ -8,95 +8,91 @@ import jakarta.validation.constraints.Past;
 
 import java.time.LocalDate;
 
-public class UpdateUserRequest {
+public record UpdateUserRequest(
 
-    @NotBlank(message = "Username is required")
-    private String username;
+        @NotBlank(message = "Username is required")
+        String username,
 
-    @Email(message = "Invalid email format")
-    @NotBlank(message = "Email is required")
-    private String email;
+        @Email(message = "Invalid email format")
+        @NotBlank(message = "Email is required")
+        String email,
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @NotNull(message = "Date of birth is required")
-    @Past(message = "Date of birth must be in the past")
-    private LocalDate dateOfBirth;
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        @NotNull(message = "Date of birth is required")
+        @Past(message = "Date of birth must be in the past")
+        LocalDate dateOfBirth,
 
-    @NotBlank(message = "Password is required")
-    private String password;
+        @NotBlank(message = "Password is required")
+        String password,
 
-    @NotBlank(message = "Confirm password is required")
-    private String confirmPassword;
+        @NotBlank(message = "Confirm password is required")
+        String confirmPassword,
 
-    private String currentPassword;
+        String currentPassword,
 
-    private String newPassword;
+        String newPassword,
 
-    private String confirmNewPassword;
+        String confirmNewPassword
+) {
+    public static final class UpdateUserRequestBuilder {
+        private String username;
+        private String email;
+        private LocalDate dateOfBirth;
+        private String password;
+        private String confirmPassword;
+        private String currentPassword;
+        private String newPassword;
+        private String confirmNewPassword;
 
-    public String getPassword() {
-        return password;
-    }
+        private UpdateUserRequestBuilder() {
+        }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+        public static UpdateUserRequestBuilder anUpdateUserRequest() {
+            return new UpdateUserRequestBuilder();
+        }
 
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
+        public UpdateUserRequestBuilder withUsername(String username) {
+            this.username = username;
+            return this;
+        }
 
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
+        public UpdateUserRequestBuilder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
 
-    // --- Getters & Setters ---
+        public UpdateUserRequestBuilder withDateOfBirth(LocalDate dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
+            return this;
+        }
 
-    public String getUsername() {
-        return username;
-    }
+        public UpdateUserRequestBuilder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+        public UpdateUserRequestBuilder withConfirmPassword(String confirmPassword) {
+            this.confirmPassword = confirmPassword;
+            return this;
+        }
 
-    public String getEmail() {
-        return email;
-    }
+        public UpdateUserRequestBuilder withCurrentPassword(String currentPassword) {
+            this.currentPassword = currentPassword;
+            return this;
+        }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+        public UpdateUserRequestBuilder withNewPassword(String newPassword) {
+            this.newPassword = newPassword;
+            return this;
+        }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
+        public UpdateUserRequestBuilder withConfirmNewPassword(String confirmNewPassword) {
+            this.confirmNewPassword = confirmNewPassword;
+            return this;
+        }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getCurrentPassword() {
-        return currentPassword;
-    }
-
-    public void setCurrentPassword(String currentPassword) {
-        this.currentPassword = currentPassword;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
-
-    public String getConfirmNewPassword() {
-        return confirmNewPassword;
-    }
-
-    public void setConfirmNewPassword(String confirmNewPassword) {
-        this.confirmNewPassword = confirmNewPassword;
+        public UpdateUserRequest build() {
+            return new UpdateUserRequest(username, email, dateOfBirth, password, confirmPassword, currentPassword, newPassword, confirmNewPassword);
+        }
     }
 }

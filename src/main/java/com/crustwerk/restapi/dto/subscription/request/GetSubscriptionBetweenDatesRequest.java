@@ -2,24 +2,31 @@ package com.crustwerk.restapi.dto.subscription.request;
 
 import java.time.LocalDate;
 
-public class GetSubscriptionBetweenDatesRequest {
+public record GetSubscriptionBetweenDatesRequest(LocalDate start, LocalDate end) {
 
-    private LocalDate start;
-    private LocalDate end;
+    public static final class GetSubscriptionBetweenDatesRequestBuilder {
+        private LocalDate start;
+        private LocalDate end;
 
-    public LocalDate getStart() {
-        return start;
-    }
+        private GetSubscriptionBetweenDatesRequestBuilder() {
+        }
 
-    public void setStart(LocalDate start) {
-        this.start = start;
-    }
+        public static GetSubscriptionBetweenDatesRequestBuilder aGetSubscriptionBetweenDatesRequest() {
+            return new GetSubscriptionBetweenDatesRequestBuilder();
+        }
 
-    public LocalDate getEnd() {
-        return end;
-    }
+        public GetSubscriptionBetweenDatesRequestBuilder withStart(LocalDate start) {
+            this.start = start;
+            return this;
+        }
 
-    public void setEnd(LocalDate end) {
-        this.end = end;
+        public GetSubscriptionBetweenDatesRequestBuilder withEnd(LocalDate end) {
+            this.end = end;
+            return this;
+        }
+
+        public GetSubscriptionBetweenDatesRequest build() {
+            return new GetSubscriptionBetweenDatesRequest(start, end);
+        }
     }
 }

@@ -4,46 +4,51 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
 
-public class CreateUserResponse {
+public record CreateUserResponse(
 
-    private Long id;
+        Long id,
 
-    private String username;
+        String username,
 
-    private String email;
+        String email,
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dateOfBirth;
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        LocalDate dateOfBirth) {
+    public static final class CreateUserResponseBuilder {
+        private Long id;
+        private String username;
+        private String email;
+        private LocalDate dateOfBirth;
 
-    public Long getId() {
-        return id;
-    }
+        private CreateUserResponseBuilder() {
+        }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+        public static CreateUserResponseBuilder aCreateUserResponse() {
+            return new CreateUserResponseBuilder();
+        }
 
-    public String getUsername() {
-        return username;
-    }
+        public CreateUserResponseBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+        public CreateUserResponseBuilder withUsername(String username) {
+            this.username = username;
+            return this;
+        }
 
-    public String getEmail() {
-        return email;
-    }
+        public CreateUserResponseBuilder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+        public CreateUserResponseBuilder withDateOfBirth(LocalDate dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
+            return this;
+        }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+        public CreateUserResponse build() {
+            return new CreateUserResponse(id, username, email, dateOfBirth);
+        }
     }
 }

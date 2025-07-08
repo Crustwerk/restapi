@@ -3,25 +3,31 @@ package com.crustwerk.restapi.dto.subscription.request;
 import com.crustwerk.restapi.model.SubscriptionDuration;
 import com.crustwerk.restapi.model.SubscriptionTier;
 
-public class CreateSubscriptionRequest {
+public record CreateSubscriptionRequest(SubscriptionTier subscriptionTier, SubscriptionDuration subscriptionDuration) {
 
-    private SubscriptionTier subscriptionTier;
-    private SubscriptionDuration subscriptionDuration;
+    public static final class CreateSubscriptionRequestBuilder {
+        private SubscriptionTier subscriptionTier;
+        private SubscriptionDuration subscriptionDuration;
 
+        private CreateSubscriptionRequestBuilder() {
+        }
 
-    public SubscriptionTier getSubscriptionTier() {
-        return subscriptionTier;
-    }
+        public static CreateSubscriptionRequestBuilder aCreateSubscriptionRequest() {
+            return new CreateSubscriptionRequestBuilder();
+        }
 
-    public void setSubscriptionTier(SubscriptionTier subscriptionTier) {
-        this.subscriptionTier = subscriptionTier;
-    }
+        public CreateSubscriptionRequestBuilder withSubscriptionTier(SubscriptionTier subscriptionTier) {
+            this.subscriptionTier = subscriptionTier;
+            return this;
+        }
 
-    public SubscriptionDuration getSubscriptionDuration() {
-        return subscriptionDuration;
-    }
+        public CreateSubscriptionRequestBuilder withSubscriptionDuration(SubscriptionDuration subscriptionDuration) {
+            this.subscriptionDuration = subscriptionDuration;
+            return this;
+        }
 
-    public void setSubscriptionDuration(SubscriptionDuration subscriptionDuration) {
-        this.subscriptionDuration = subscriptionDuration;
+        public CreateSubscriptionRequest build() {
+            return new CreateSubscriptionRequest(subscriptionTier, subscriptionDuration);
+        }
     }
 }

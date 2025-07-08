@@ -8,63 +8,68 @@ import jakarta.validation.constraints.Past;
 
 import java.time.LocalDate;
 
-public class CreateUserRequest {
+public record CreateUserRequest(
 
-    @NotBlank(message = "Username is required")
-    private String username;
+        @NotBlank(message = "Username is required")
+        String username,
 
-    @Email(message = "Invalid email format")
-    @NotBlank(message = "Email is required")
-    private String email;
+        @Email(message = "Invalid email format")
+        @NotBlank(message = "Email is required")
+        String email,
 
-    @NotBlank(message = "Password is required")
-    private String password;
+        @NotBlank(message = "Password is required")
+        String password,
 
-    @NotBlank(message = "Confirm password is required")
-    private String confirmPassword;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @NotNull(message = "Date of birth is required")
-    @Past(message = "Date of birth must be in the past")
-    //inserire qui validatore custom
-    private LocalDate dateOfBirth; //YYYY-MM-DD
+        @NotBlank(message = "Confirm password is required")
+        String confirmPassword,
 
-    public String getUsername() {
-        return username;
-    }
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        @NotNull(message = "Date of birth is required")
+        @Past(message = "Date of birth must be in the past")
+        //inserire qui validatore custom
+        LocalDate dateOfBirth) {
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public static final class CreateUserRequestBuilder {
+        private String username;
+        private String email;
+        private String password;
+        private String confirmPassword;
+        private LocalDate dateOfBirth;
 
-    public String getEmail() {
-        return email;
-    }
+        private CreateUserRequestBuilder() {
+        }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+        public static CreateUserRequestBuilder aCreateUserRequest() {
+            return new CreateUserRequestBuilder();
+        }
 
-    public String getPassword() {
-        return password;
-    }
+        public CreateUserRequestBuilder withUsername(String username) {
+            this.username = username;
+            return this;
+        }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+        public CreateUserRequestBuilder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
 
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
+        public CreateUserRequestBuilder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
 
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
+        public CreateUserRequestBuilder withConfirmPassword(String confirmPassword) {
+            this.confirmPassword = confirmPassword;
+            return this;
+        }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
+        public CreateUserRequestBuilder withDateOfBirth(LocalDate dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
+            return this;
+        }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+        public CreateUserRequest build() {
+            return new CreateUserRequest(username, email, password, confirmPassword, dateOfBirth);
+        }
     }
 }
