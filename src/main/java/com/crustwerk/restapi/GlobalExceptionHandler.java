@@ -2,7 +2,6 @@ package com.crustwerk.restapi;
 
 import com.crustwerk.restapi.exception.ApiError;
 import com.crustwerk.restapi.exception.EmailAlreadyUsedException;
-import com.crustwerk.restapi.exception.UnderageUserException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,11 +64,4 @@ public class GlobalExceptionHandler {
         ApiError error = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(UnderageUserException.class)
-    public ResponseEntity<ApiError> handleUnderageUser(UnderageUserException ex) {
-        ApiError error = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
 }

@@ -1,14 +1,12 @@
 package com.crustwerk.restapi.service;
 
 import com.crustwerk.restapi.exception.EmailAlreadyUsedException;
-import com.crustwerk.restapi.exception.UnderageUserException;
 import com.crustwerk.restapi.model.User;
 import com.crustwerk.restapi.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
 /**
@@ -33,11 +31,6 @@ public class UserService {
     public User createUser(User user, String rawPassword) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyUsedException();
-        }
-
-        //TODO: spostare su validatore custom
-        if (Period.between(user.getDateOfBirth(), LocalDate.now()).getYears() < 18) {
-            throw new UnderageUserException();
         }
 
         user.setPasswordHash(passwordEncoder.encode(rawPassword));

@@ -2,8 +2,24 @@ package com.crustwerk.restapi.dto.subscription.request;
 
 import com.crustwerk.restapi.model.SubscriptionDuration;
 import com.crustwerk.restapi.model.SubscriptionTier;
+import jakarta.validation.constraints.NotNull;
 
-public record CreateSubscriptionRequest(SubscriptionTier subscriptionTier, SubscriptionDuration subscriptionDuration) {
+/**
+ * Un enum non può essere "blank" perché non è una String.
+ * <p>
+ * Se ometti completamente il campo nel JSON, il valore sarà null, quindi @NotNull è l'annotazione corretta.
+ * <p>
+ * Se invece specifichi un valore non valido, Jackson fallirà già in fase di deserializzazione (lanciando un <b>HttpMessageNotReadableException</b>), prima ancora della validazione.
+ */
+
+public record CreateSubscriptionRequest(
+
+        @NotNull
+        SubscriptionTier subscriptionTier,
+
+        @NotNull
+        SubscriptionDuration subscriptionDuration
+) {
 
     public static final class CreateSubscriptionRequestBuilder {
         private SubscriptionTier subscriptionTier;

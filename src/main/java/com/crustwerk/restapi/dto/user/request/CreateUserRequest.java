@@ -1,5 +1,6 @@
 package com.crustwerk.restapi.dto.user.request;
 
+import com.crustwerk.restapi.validation.UnderageUser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.Past;
 
 import java.time.LocalDate;
 
+@UnderageUser
 public record CreateUserRequest(
 
         @NotBlank(message = "Username is required")

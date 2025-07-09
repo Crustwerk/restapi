@@ -39,6 +39,13 @@ public class SubscriptionController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    /**
+     * Utilizza {@link Optional} per rappresentare l’assenza della risorsa in modo esplicito,
+     * evitando eccezioni e migliorando la leggibilità.
+     * In un contesto REST restituisce 404 se la risorsa non esiste, senza sollevare errori.
+     * Questo approccio è consigliato anche per le chiamate tra servizi interni.
+     */
+
     @GetMapping("/{id}")
     public ResponseEntity<GetSubscriptionResponse> getSubscriptionById(@Valid @PathVariable Long id) {
         Optional<Subscription> subscriptionOptional = subscriptionService.getSubscriptionById(id);
