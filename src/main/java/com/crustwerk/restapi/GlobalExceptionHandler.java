@@ -41,6 +41,7 @@ public class GlobalExceptionHandler {
 
     }
 
+    //TODO
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiError> handleInvalidFormatException(HttpMessageNotReadableException ex) {
         String message = "Malformed JSON or invalid data format.";
