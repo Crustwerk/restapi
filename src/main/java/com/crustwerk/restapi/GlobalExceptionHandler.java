@@ -14,13 +14,47 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * {@link org.springframework.http.converter.HttpMessageNotReadableException}
+ * Viene sollevata quando la deserializzazione del corpo della richiesta fallisce (es. data non conforme a {@code @JsonFormat}).
+ * <br>
+ * {@link org.springframework.web.bind.MethodArgumentNotValidException}
+ * Viene sollevata quando fallisce la validazione di un parametro annotato con {@code @Valid} o {@code @Validated}.
+ * <br><br>
+ * NB: le valiazioni vengono verificate solo se la deserializzazione ha avuto esito positivo.
+ */
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
     /**
-     * @@ResponseBody Funziona similmente a @RequestBody e indica a Spring di non rifarsi all'URI per comunicare col client ma a un oggetto.
-     * In entrata costruisco il DTO dal JSON (e non da una query parametrica) e in uscita inserisco il ritorno in un body
-     * (anzichè costruire un URI per far accedere il client a una risorsa, vedi es. sotto).
+     * @HttpMessageNotReadableException viene sollevata da Spring quando c'è un problema nella lettura del corpo della richiesta.
+     * Nel caso di un formato di dati non valido, questa eccezione è un wrapper per InvalidFormatException, che viene automaticamente gestita da Spring.
+     * @InvalidFormatException è sollevata da Jackson quando un dato nel JSON non può essere convertito nel tipo Java desiderato (come una data che non corrisponde al formato yyyy-MM-dd).
      */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleInvalidFormatException(HttpMessageNotReadableException ex) {
+        String message = "Malformed JSON or invalid data format.";
+        Map<String, String> fieldErrors = new HashMap<>();
+
+        Throwable cause = ex.getCause();
+        if (cause instanceof InvalidFormatException invalidFormat && !invalidFormat.getPath().isEmpty()) {
+            fieldErrors.put(invalidFormat.getPath().get(0).getFieldName(), "Invalid format. Expected format: yyyy-MM-dd");
+            message = "Invalid format(s) for one or more fields.";
+        }
+
+        ApiError error = new ApiError(HttpStatus.BAD_REQUEST, message);
+        error.setFieldErrors(fieldErrors);
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * @@ResponseBody fa sì che l'oggetto restituito dal metodo venga serializzato nel body della risposta HTTP,
+     * anziché cercare una view o redirezionare.
+     * Fondamentale nei controller REST per scambiare oggetti JSON con il client.
+     */
+
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -41,24 +75,6 @@ public class GlobalExceptionHandler {
 
     }
 
-    //TODO
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ApiError> handleInvalidFormatException(HttpMessageNotReadableException ex) {
-        String message = "Malformed JSON or invalid data format.";
-        Map<String, String> fieldErrors = new HashMap<>();
-
-        Throwable cause = ex.getCause();
-        if (cause instanceof InvalidFormatException invalidFormat && !invalidFormat.getPath().isEmpty()) {
-            String fieldName = invalidFormat.getPath().get(0).getFieldName();
-            fieldErrors.put(fieldName, "Invalid format. Expected format: yyyy-MM-dd");
-            message = "Invalid format for field: " + fieldName;
-        }
-
-        ApiError error = new ApiError(HttpStatus.BAD_REQUEST, message);
-        error.setFieldErrors(fieldErrors);
-
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
 
     @ExceptionHandler(EmailAlreadyUsedException.class)
     public ResponseEntity<ApiError> handleEmailAlreadyUsed(EmailAlreadyUsedException ex) {

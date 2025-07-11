@@ -44,7 +44,7 @@ public class UserController {
     }
 
     /**
-     * @@RequestBody Fa sì che venga deserializzato il body e passato come parametro al metodo
+     * @@RequestBody Fa sì che venga de-serializzato il body e passato come parametro al metodo.
      * In sua assenza Spring si aspetta una query string (es.?username=mario&email=...)
      */
     @PostMapping
