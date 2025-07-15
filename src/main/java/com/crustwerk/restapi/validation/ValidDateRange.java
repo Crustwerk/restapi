@@ -7,6 +7,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
+import java.time.LocalDate;
 
 /**
  * ValidDateRange è un'annotazione di validazione personalizzata per assicurarsi che una data di inizio
@@ -64,7 +65,10 @@ public @interface ValidDateRange {
                                ConstraintValidatorContext context) {
             if (request.start() == null || request.end() == null) return true; // delega a @NotNull
 
-            return request.start().isBefore(request.end());
+            LocalDate startDate = LocalDate.parse(request.start());
+            LocalDate endDate = LocalDate.parse(request.end());
+
+            return startDate.isBefore(endDate);
         }
     }
 }

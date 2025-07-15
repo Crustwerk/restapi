@@ -9,6 +9,8 @@ import com.crustwerk.restapi.model.SubscriptionDuration;
 import com.crustwerk.restapi.model.SubscriptionTier;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 import static com.crustwerk.restapi.dto.subscription.response.CreateSubscriptionResponse.CreateSubscriptionResponseBuilder;
 import static com.crustwerk.restapi.dto.subscription.response.GetSubscriptionResponse.GetSubscriptionResponseBuilder;
 
@@ -28,8 +30,8 @@ public class SubscriptionMapper {
         if (req == null) return null;
 
         Subscription subscription = new Subscription();
-        subscription.setStart(req.start());
-        subscription.setEnd(req.end());
+        subscription.setStart(LocalDate.parse(req.start()));
+        subscription.setEnd(LocalDate.parse(req.end()));
         return subscription;
     }
 

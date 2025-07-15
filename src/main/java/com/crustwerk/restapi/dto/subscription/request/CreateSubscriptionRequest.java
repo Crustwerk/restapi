@@ -3,7 +3,7 @@ package com.crustwerk.restapi.dto.subscription.request;
 import com.crustwerk.restapi.model.SubscriptionDuration;
 import com.crustwerk.restapi.model.SubscriptionTier;
 import com.crustwerk.restapi.validation.ValidEnum;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * Un enum non può essere "blank" perché non è una String.
@@ -14,11 +14,11 @@ import jakarta.validation.constraints.NotNull;
  */
 public record CreateSubscriptionRequest(
 
-        @NotNull
+        @NotBlank
         @ValidEnum(enumClass = SubscriptionTier.class)
         String subscriptionTier,
 
-        @NotNull
+        @NotBlank
         @ValidEnum(enumClass = SubscriptionDuration.class)
         String subscriptionDuration
 ) {

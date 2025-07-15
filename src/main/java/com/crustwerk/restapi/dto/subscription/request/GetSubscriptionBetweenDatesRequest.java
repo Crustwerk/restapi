@@ -1,26 +1,25 @@
 package com.crustwerk.restapi.dto.subscription.request;
 
+import com.crustwerk.restapi.validation.ValidDate;
 import com.crustwerk.restapi.validation.ValidDateRange;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.NotNull;
-
-import java.time.LocalDate;
+import jakarta.validation.constraints.NotBlank;
 
 @ValidDateRange
 public record GetSubscriptionBetweenDatesRequest(
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        @NotNull(message = "Start date is required")
-        LocalDate start,
 
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        @NotNull(message = "End date is required")
-        LocalDate end
+        @NotBlank(message = "Start date is required")
+        @ValidDate
+        String start,
+
+        @NotBlank(message = "End date is required")
+        @ValidDate
+        String end
 ) {
 
     public static final class GetSubscriptionBetweenDatesRequestBuilder {
 
-        private LocalDate start;
-        private LocalDate end;
+        private String start;
+        private String end;
 
         private GetSubscriptionBetweenDatesRequestBuilder() {
         }
@@ -29,12 +28,12 @@ public record GetSubscriptionBetweenDatesRequest(
             return new GetSubscriptionBetweenDatesRequestBuilder();
         }
 
-        public GetSubscriptionBetweenDatesRequestBuilder withStart(LocalDate start) {
+        public GetSubscriptionBetweenDatesRequestBuilder withStart(String start) {
             this.start = start;
             return this;
         }
 
-        public GetSubscriptionBetweenDatesRequestBuilder withEnd(LocalDate end) {
+        public GetSubscriptionBetweenDatesRequestBuilder withEnd(String end) {
             this.end = end;
             return this;
         }
