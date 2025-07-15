@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
 
         Throwable cause = ex.getCause();
         if (cause instanceof InvalidFormatException invalidFormat && !invalidFormat.getPath().isEmpty()) {
-            fieldErrors.put(invalidFormat.getPath().get(0).getFieldName(), "Invalid format. Expected format: yyyy-MM-dd");
+            fieldErrors.put(invalidFormat.getPath().get(0).getFieldName(), "Invalid format.");
             message = "Invalid format(s) for one or more fields.";
         }
 

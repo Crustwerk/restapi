@@ -5,6 +5,8 @@ import com.crustwerk.restapi.dto.subscription.request.GetSubscriptionBetweenDate
 import com.crustwerk.restapi.dto.subscription.response.CreateSubscriptionResponse;
 import com.crustwerk.restapi.dto.subscription.response.GetSubscriptionResponse;
 import com.crustwerk.restapi.model.Subscription;
+import com.crustwerk.restapi.model.SubscriptionDuration;
+import com.crustwerk.restapi.model.SubscriptionTier;
 import org.springframework.stereotype.Component;
 
 import static com.crustwerk.restapi.dto.subscription.response.CreateSubscriptionResponse.CreateSubscriptionResponseBuilder;
@@ -17,8 +19,8 @@ public class SubscriptionMapper {
         if (req == null) return null;
 
         Subscription subscription = new Subscription();
-        subscription.setSubscriptionTier(req.subscriptionTier());
-        subscription.setSubscriptionDuration(req.subscriptionDuration());
+        subscription.setSubscriptionTier(SubscriptionTier.valueOf(req.subscriptionTier()));
+        subscription.setSubscriptionDuration(SubscriptionDuration.valueOf(req.subscriptionDuration()));
         return subscription;
     }
 

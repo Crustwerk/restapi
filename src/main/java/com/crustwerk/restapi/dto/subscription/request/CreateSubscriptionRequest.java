@@ -2,6 +2,7 @@ package com.crustwerk.restapi.dto.subscription.request;
 
 import com.crustwerk.restapi.model.SubscriptionDuration;
 import com.crustwerk.restapi.model.SubscriptionTier;
+import com.crustwerk.restapi.validation.ValidEnum;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -11,19 +12,20 @@ import jakarta.validation.constraints.NotNull;
  * <p>
  * Se invece specifichi un valore non valido, Jackson fallirà già in fase di deserializzazione (lanciando un <b>HttpMessageNotReadableException</b>), prima ancora della validazione.
  */
-
 public record CreateSubscriptionRequest(
 
         @NotNull
-        SubscriptionTier subscriptionTier,
+        @ValidEnum(enumClass = SubscriptionTier.class)
+        String subscriptionTier,
 
         @NotNull
-        SubscriptionDuration subscriptionDuration
+        @ValidEnum(enumClass = SubscriptionDuration.class)
+        String subscriptionDuration
 ) {
 
     public static final class CreateSubscriptionRequestBuilder {
-        private SubscriptionTier subscriptionTier;
-        private SubscriptionDuration subscriptionDuration;
+        private String subscriptionTier;
+        private String subscriptionDuration;
 
         private CreateSubscriptionRequestBuilder() {
         }
@@ -32,12 +34,12 @@ public record CreateSubscriptionRequest(
             return new CreateSubscriptionRequestBuilder();
         }
 
-        public CreateSubscriptionRequestBuilder withSubscriptionTier(SubscriptionTier subscriptionTier) {
+        public CreateSubscriptionRequestBuilder withSubscriptionTier(String subscriptionTier) {
             this.subscriptionTier = subscriptionTier;
             return this;
         }
 
-        public CreateSubscriptionRequestBuilder withSubscriptionDuration(SubscriptionDuration subscriptionDuration) {
+        public CreateSubscriptionRequestBuilder withSubscriptionDuration(String subscriptionDuration) {
             this.subscriptionDuration = subscriptionDuration;
             return this;
         }

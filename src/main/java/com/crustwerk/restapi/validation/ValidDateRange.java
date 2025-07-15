@@ -1,6 +1,9 @@
 package com.crustwerk.restapi.validation;
 
+import com.crustwerk.restapi.dto.subscription.request.GetSubscriptionBetweenDatesRequest;
 import jakarta.validation.Constraint;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
@@ -13,8 +16,8 @@ import java.lang.annotation.*;
  * Specifica, tramite "validatedBy", la classe che implementa la logica della validazione
  * (la classe deve implementare l'interfaccia {@code ConstraintValidator}).</p>
  *
- * <p><b>@Target({ElementType.TYPE})</b> indica lo scope dell'annotazione. In questo caso,
- * {@code TYPE} significa che si applica all'intera classe o record, perché la validazione riguarda più campi.
+ * <p><b>@Target({ElementType.TYPE})</b> indica i tipi di elementi su cui poter applicare l'annotazione (campi, metodi, classi, etc).
+ * In questo caso, {@code TYPE} significa che si applica all'intera classe o record (infatti la validazione riguarda più campi).
  * (Per validazioni su singoli campi si userebbe {@code FIELD} o {@code METHOD}).</p>
  *
  * <p><b>@Retention(RetentionPolicy.RUNTIME)</b> definisce fino a quando l’annotazione è conservata.
@@ -42,10 +45,8 @@ import java.lang.annotation.*;
  * Il valore di `default` rappresenta il valore predefinito che verrà utilizzato
  * se il parametro non viene specificato quando si applica l’annotazione.</p>
  */
-
-
 @Documented
-@Constraint(validatedBy = DateRangeValidator.class)
+@Constraint(validatedBy = ValidDateRange.ValidDateRangeValidator.class)
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidDateRange {
@@ -54,4 +55,16 @@ public @interface ValidDateRange {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+    class ValidDateRangeValidator implements ConstraintValidator<ValidDateRange,
+            GetSubscriptionBetweenDatesRequest> {
+
+        @Override
+        public boolean isValid(GetSubscriptionBetweenDatesRequest request,
+                               ConstraintValidatorContext context) {
+            if (request.start() == null || request.end() == null) return true; // delega a @NotNull
+
+            return request.start().isBefore(request.end());
+        }
+    }
 }
