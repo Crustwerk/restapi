@@ -19,15 +19,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @@Validated Fa parte del framework Spring e si usa a livello di classe.
- * Serve per attivare le validazioni dei parametri primitivi (es. @PathVariable @Min(1) Long id) e la validazione a gruppi (avanzato, todo).
- * @@Valid Fa parte di jakarta (ex. javax).
- * Serve per attivare le validazioni definite nei bean, dunque si usa esclusivamente sui parametri di tipo oggetto (es. @Valid @RequestBody CreateUserRequest req)
- * @Controller Espone gli endpoint REST relativi all'entità User.
+ * <p>
+ *
+ * @@Valid Fa parte di Jakarta Bean Validation.
+ * Si usa per validare oggetti (bean) e i campi al loro interno, come nel caso di un parametro annotato con <b>@RequestBody</b>.<br>
+ * Attiva la validazione su tutti i campi dell'oggetto.<br>
+ * @@Validated Fa parte di Spring.
+ * Supporta gruppi di validazione, che permettono di eseguire validazioni diverse in contesti differenti (ad esempio, creazione vs aggiornamento).<br>
+ * Pu&ograve; essere usato anche su parametri primitivi come <b>@PathVariable</b> o <b>@RequestParam</b>.<br></p>
+
+ * @Controller Espone gli endpoint REST relativi all'entità (User).
  * Si occupa esclusivamente di ricevere richieste dal client (DTO in ingresso),
  * orchestrare le chiamate a Mapper, Assembler e Service,
  * e restituire le risposte (DTO in uscita).
- * Non contiene logica di dominio né costruzione diretta di entità.
+ * Non contiene logica di dominio n&eacute; costruzione diretta di entità.
  */
 
 @RestController

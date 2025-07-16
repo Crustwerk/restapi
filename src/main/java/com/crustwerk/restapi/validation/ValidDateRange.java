@@ -1,5 +1,6 @@
 package com.crustwerk.restapi.validation;
 
+import com.crustwerk.restapi.Utils;
 import com.crustwerk.restapi.dto.subscription.request.GetSubscriptionBetweenDatesRequest;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
@@ -8,6 +9,7 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 /**
  * ValidDateRange è un'annotazione di validazione personalizzata per assicurarsi che una data di inizio
@@ -57,18 +59,29 @@ public @interface ValidDateRange {
 
     Class<? extends Payload>[] payload() default {};
 
-    class ValidDateRangeValidator implements ConstraintValidator<ValidDateRange,
-            GetSubscriptionBetweenDatesRequest> {
+    class ValidDateRangeValidator implements ConstraintValidator<ValidDateRange, GetSubscriptionBetweenDatesRequest> {
 
         @Override
-        public boolean isValid(GetSubscriptionBetweenDatesRequest request,
-                               ConstraintValidatorContext context) {
-            if (request.start() == null || request.end() == null) return true; // delega a @NotNull
+        public boolean isValid(GetSubscriptionBetweenDatesRequest request, ConstraintValidatorContext context) {
+            if (request.start() == null || request.end() == null) {
+                return true;
+            }
 
-            LocalDate startDate = LocalDate.parse(request.start());
-            LocalDate endDate = LocalDate.parse(request.end());
+            try {
+                LocalDate startDate = LocalDate.parse(request.start());
+                LocalDate endDate = LocalDate.parse(request.end());
 
-            return startDate.isBefore(endDate);
+                if (startDate.isAfter(endDate)) {
+                    context.disableDefaultConstraintViolation();
+                    context.buildConstraintViolationWithTemplate("Start date must be before end date")
+                            .addConstraintViolation();
+                    return false;
+                }
+                return true;
+
+            } catch (DateTimeParseException e) {
+                return false;
+            }
         }
     }
 }
