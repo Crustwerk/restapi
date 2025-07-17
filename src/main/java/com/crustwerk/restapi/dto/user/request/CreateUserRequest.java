@@ -1,15 +1,10 @@
 package com.crustwerk.restapi.dto.user.request;
 
-import com.crustwerk.restapi.validation.UnderageUser;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.crustwerk.restapi.validation.ValidDate;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 
-import java.time.LocalDate;
-
-@UnderageUser
 public record CreateUserRequest(
 
         @NotBlank(message = "Username is required")
@@ -25,18 +20,17 @@ public record CreateUserRequest(
         @NotBlank(message = "Confirm password is required")
         String confirmPassword,
 
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        @NotNull(message = "Date of birth is required")
+        @ValidDate
+        @NotBlank(message = "Date of birth is required")
         @Past(message = "Date of birth must be in the past")
-        //inserire qui validatore custom
-        LocalDate dateOfBirth) {
+        String dateOfBirth) {
 
     public static final class CreateUserRequestBuilder {
         private String username;
         private String email;
         private String password;
         private String confirmPassword;
-        private LocalDate dateOfBirth;
+        private String dateOfBirth;
 
         private CreateUserRequestBuilder() {
         }
@@ -65,7 +59,7 @@ public record CreateUserRequest(
             return this;
         }
 
-        public CreateUserRequestBuilder withDateOfBirth(LocalDate dateOfBirth) {
+        public CreateUserRequestBuilder withDateOfBirth(String dateOfBirth) {
             this.dateOfBirth = dateOfBirth;
             return this;
         }

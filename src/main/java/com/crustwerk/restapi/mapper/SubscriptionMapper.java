@@ -1,7 +1,5 @@
 package com.crustwerk.restapi.mapper;
 
-import com.crustwerk.restapi.dto.subscription.request.CreateSubscriptionRequest;
-import com.crustwerk.restapi.dto.subscription.request.GetSubscriptionBetweenDatesRequest;
 import com.crustwerk.restapi.dto.subscription.response.CreateSubscriptionResponse;
 import com.crustwerk.restapi.dto.subscription.response.GetSubscriptionResponse;
 import com.crustwerk.restapi.model.Subscription;
@@ -17,21 +15,21 @@ import static com.crustwerk.restapi.dto.subscription.response.GetSubscriptionRes
 @Component
 public class SubscriptionMapper {
 
-    public Subscription toModel(CreateSubscriptionRequest req) {
-        if (req == null) return null;
+    public Subscription toModel(SubscriptionTier tier, SubscriptionDuration duration) {
+        if (tier == null || duration == null) return null;
 
         Subscription subscription = new Subscription();
-        subscription.setSubscriptionTier(SubscriptionTier.valueOf(req.subscriptionTier()));
-        subscription.setSubscriptionDuration(SubscriptionDuration.valueOf(req.subscriptionDuration()));
+        subscription.setSubscriptionTier(tier);
+        subscription.setSubscriptionDuration(duration);
         return subscription;
     }
 
-    public Subscription toModel(GetSubscriptionBetweenDatesRequest req) {
-        if (req == null) return null;
+    public Subscription toModel(LocalDate start, LocalDate end) {
+        if (start == null || end == null) return null;
 
         Subscription subscription = new Subscription();
-        subscription.setStart(LocalDate.parse(req.start()));
-        subscription.setEnd(LocalDate.parse(req.end()));
+        subscription.setStart(start);
+        subscription.setEnd(end);
         return subscription;
     }
 

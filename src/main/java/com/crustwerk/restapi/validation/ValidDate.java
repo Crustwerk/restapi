@@ -30,8 +30,6 @@ public @interface ValidDate {
 
         @Override
         public boolean isValid(String value, ConstraintValidatorContext context) {
-            System.out.println("ValidDateValidator isValid");
-
             if (value == null) {
                 return true;
             }

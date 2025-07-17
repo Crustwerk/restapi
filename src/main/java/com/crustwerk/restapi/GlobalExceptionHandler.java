@@ -2,6 +2,7 @@ package com.crustwerk.restapi;
 
 import com.crustwerk.restapi.exception.ApiError;
 import com.crustwerk.restapi.exception.EmailAlreadyUsedException;
+import com.crustwerk.restapi.exception.InvalidDateRangeException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,12 +73,17 @@ public class GlobalExceptionHandler {
         // return "ciolla" <- senza @ResponseBody Spring risponderebbe al client puntando alla risorsa api/users/ciolla
         // nel caso di una ResponseEntity non è necessario @ResponseBody perché Spring conosce il tipo e sa già cosa fare
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-
     }
 
 
     @ExceptionHandler(EmailAlreadyUsedException.class)
     public ResponseEntity<ApiError> handleEmailAlreadyUsed(EmailAlreadyUsedException ex) {
+        ApiError error = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidDateRangeException.class)
+    public ResponseEntity<ApiError> handleInvalidDateRange(InvalidDateRangeException ex) {
         ApiError error = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }

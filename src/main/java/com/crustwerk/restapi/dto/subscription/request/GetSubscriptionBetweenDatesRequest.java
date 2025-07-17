@@ -1,10 +1,8 @@
 package com.crustwerk.restapi.dto.subscription.request;
 
 import com.crustwerk.restapi.validation.ValidDate;
-import com.crustwerk.restapi.validation.ValidDateRange;
 import jakarta.validation.constraints.NotBlank;
 
-@ValidDateRange
 public record GetSubscriptionBetweenDatesRequest(
 
         @NotBlank(message = "Start date is required")

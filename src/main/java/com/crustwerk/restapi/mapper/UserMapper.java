@@ -7,6 +7,8 @@ import com.crustwerk.restapi.dto.user.response.GetUserResponse;
 import com.crustwerk.restapi.model.User;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 import static com.crustwerk.restapi.dto.user.response.CreateUserResponse.CreateUserResponseBuilder;
 import static com.crustwerk.restapi.dto.user.response.GetUserResponse.GetUserResponseBuilder;
 
@@ -19,13 +21,13 @@ import static com.crustwerk.restapi.dto.user.response.GetUserResponse.GetUserRes
 @Component
 public class UserMapper {
 
-    public User toModel(CreateUserRequest createUserRequest) {
+    public User toModel(CreateUserRequest createUserRequest, LocalDate dateOfBirth) {
         if (createUserRequest == null) return null;
 
         User user = new User();
         user.setUsername(createUserRequest.username());
         user.setEmail(createUserRequest.email());
-        user.setDateOfBirth(createUserRequest.dateOfBirth());
+        user.setDateOfBirth(dateOfBirth);
         return user;
     }
 

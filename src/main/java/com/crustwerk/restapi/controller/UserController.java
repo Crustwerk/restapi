@@ -1,10 +1,12 @@
 package com.crustwerk.restapi.controller;
 
+import com.crustwerk.restapi.Utils;
 import com.crustwerk.restapi.dto.user.request.CreateUserRequest;
 import com.crustwerk.restapi.dto.user.request.DeleteUserRequest;
 import com.crustwerk.restapi.dto.user.request.UpdateUserRequest;
 import com.crustwerk.restapi.dto.user.response.CreateUserResponse;
 import com.crustwerk.restapi.dto.user.response.GetUserResponse;
+import com.crustwerk.restapi.exception.LegalAgeUserException;
 import com.crustwerk.restapi.mapper.UserMapper;
 import com.crustwerk.restapi.model.User;
 import com.crustwerk.restapi.service.UserService;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +30,6 @@ import java.util.List;
  * @@Validated Fa parte di Spring.
  * Supporta gruppi di validazione, che permettono di eseguire validazioni diverse in contesti differenti (ad esempio, creazione vs aggiornamento).<br>
  * Pu&ograve; essere usato anche su parametri primitivi come <b>@PathVariable</b> o <b>@RequestParam</b>.<br></p>
-
  * @Controller Espone gli endpoint REST relativi all'entità (User).
  * Si occupa esclusivamente di ricevere richieste dal client (DTO in ingresso),
  * orchestrare le chiamate a Mapper, Assembler e Service,
@@ -53,12 +55,17 @@ public class UserController {
      * In sua assenza Spring si aspetta una query string (es.?username=mario&email=...)
      */
     @PostMapping
-    public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest req) {
+    public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest req) throws LegalAgeUserException {
         if (!req.password().equals(req.confirmPassword())) {
             throw new IllegalArgumentException("Password and Confirm Password do not match");
         }
 
-        User user = userMapper.toModel(req);
+        LocalDate dateOfBirth = LocalDate.parse(req.dateOfBirth(), Utils.DATE_TIME_FORMATTER);
+        if (dateOfBirth.isBefore(LocalDate.now().minusYears(18))) {
+            throw new LegalAgeUserException();
+        }
+
+        User user = userMapper.toModel(req, dateOfBirth);
         User saved = userService.createUser(user, req.password());
         CreateUserResponse response = userMapper.toCreateUserResponse(saved);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
