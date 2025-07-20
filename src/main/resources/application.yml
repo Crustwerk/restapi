@@ -1,21 +1,30 @@
 spring:
-  application.name: restapi
+  application:
+    name: restapi
+
   datasource:
-    url: jdbc:h2:mem:restapi
+    url: jdbc:h2:mem:restapi;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: user
     password: pass
+    driverClassName: org.h2.Driver
     generate-unique-name: false
     name: "restapi"
+
+  # Disabilita la gestione automatica delle entità JPA (non usiamo JPA, quindi non serve Hibernate)
   jpa:
-    hibernate.ddl-auto: update
-    show-sql: true
+    hibernate:
+      ddl-auto: none   # Non usiamo Hibernate per la gestione delle tabelle
+    show-sql: true     # Mostra le query SQL eseguite
     properties:
       hibernate:
-        #Grazie alla configurazione sottostante le @Entity vengono salvate su DB in minuscolo.
-        #Per referenziare nelle query bisogna usare le virgolette (es. SELECT * FROM "subscription")
-        #altrimenti vengono parsate automaticamente in maiuscolo (USER, SUBSCRIPTION)
+        # Grazie alla configurazione sottostante, le @Entity vengono salvate su DB in minuscolo.
+        # Per referenziare nelle query bisogna usare le virgolette (es. SELECT * FROM "subscription").
         globally_quoted_identifiers: true
-  sql.init.mode: always
+
+  # Imposta la modalità di inizializzazione del database
+  sql:
+    init:
+      mode: always  # Esegui schema.sql e data.sql sempre all'avvio dell'applicazione
 
 logging:
   level:

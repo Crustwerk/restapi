@@ -22,7 +22,7 @@ public record CreateUserRequest(
 
         @ValidDate
         @NotBlank(message = "Date of birth is required")
-        @Past(message = "Date of birth must be in the past")
+        //TODO: adeguare a String -> @Past(message = "Date of birth must be in the past")
         String dateOfBirth) {
 
     public static final class CreateUserRequestBuilder {

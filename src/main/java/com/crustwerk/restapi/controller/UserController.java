@@ -61,7 +61,7 @@ public class UserController {
         }
 
         LocalDate dateOfBirth = LocalDate.parse(req.dateOfBirth(), Utils.DATE_TIME_FORMATTER);
-        if (dateOfBirth.isBefore(LocalDate.now().minusYears(18))) {
+        if (!dateOfBirth.isBefore(LocalDate.now().minusYears(18))) {
             throw new LegalAgeUserException();
         }
 

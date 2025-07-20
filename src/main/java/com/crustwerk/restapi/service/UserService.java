@@ -1,8 +1,8 @@
 package com.crustwerk.restapi.service;
 
+import com.crustwerk.restapi.dao.UserDao;
 import com.crustwerk.restapi.exception.EmailAlreadyUsedException;
 import com.crustwerk.restapi.model.User;
-import com.crustwerk.restapi.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,36 +20,45 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserDao userDao;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    public UserService(UserDao userDao, BCryptPasswordEncoder passwordEncoder) {
+        this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
     }
 
+    // Creazione di un nuovo User
     public User createUser(User user, String rawPassword) {
-        if (userRepository.existsByEmail(user.getEmail())) {
+        // Verifica se l'email esiste già
+        if (userDao.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyUsedException();
         }
 
+        // Cripta la password
         user.setPasswordHash(passwordEncoder.encode(rawPassword));
+
+        // Imposta le date
         LocalDate now = LocalDate.now();
         user.setCreatedAt(now);
         user.setLastUpdateAt(now);
 
-        return userRepository.save(user);
+        // Salviamo l'utente nel database
+        userDao.addUser(user);
+        return user;
     }
 
+    // Recupera tutti gli utenti
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userDao.getAllUsers();
     }
 
+    // Recupera un User per ID
     public User getUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        return userDao.getUserById(id);
     }
 
+    // Aggiorna un User
     public User updateUser(Long id, User newUserData, String rawPassword) {
         User existing = getUserById(id);
 
@@ -59,10 +68,12 @@ public class UserService {
         existing.setLastUpdateAt(LocalDate.now());
         existing.setPasswordHash(passwordEncoder.encode(rawPassword));
 
-        return userRepository.save(existing);
+        userDao.updateUser(existing);
+        return existing;
     }
 
+    // Elimina un User
     public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+        userDao.deleteUser(id);
     }
 }

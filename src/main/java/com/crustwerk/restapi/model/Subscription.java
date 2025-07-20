@@ -1,22 +1,23 @@
 package com.crustwerk.restapi.model;
 
-import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
-@Entity
 public class Subscription {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private LocalDate start;
     private LocalDate end;
-    @Enumerated(EnumType.STRING)
     private SubscriptionTier subscriptionTier;
-    @Enumerated(EnumType.STRING)
     private SubscriptionDuration subscriptionDuration;
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public LocalDate getStart() {
         return start;
@@ -48,13 +49,5 @@ public class Subscription {
 
     public void setSubscriptionDuration(SubscriptionDuration subscriptionDuration) {
         this.subscriptionDuration = subscriptionDuration;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 }
