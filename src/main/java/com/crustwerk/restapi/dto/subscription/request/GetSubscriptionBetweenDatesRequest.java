@@ -1,16 +1,23 @@
 package com.crustwerk.restapi.dto.subscription.request;
 
 import com.crustwerk.restapi.validation.ValidDate;
+import com.crustwerk.restapi.validation.ValidDateInterface;
+import com.crustwerk.restapi.validation.ValidDateRange;
+import com.crustwerk.restapi.validation.ValidDateRangeInterface;
+import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.NotBlank;
 
+
+@ValidDateRange(groups = ValidDateRangeInterface.class)
+@GroupSequence({GetSubscriptionBetweenDatesRequest.class, ValidDateInterface.class, ValidDateRangeInterface.class})
 public record GetSubscriptionBetweenDatesRequest(
 
         @NotBlank(message = "Start date is required")
-        @ValidDate
+        @ValidDate(groups = ValidDateInterface.class)
         String start,
 
         @NotBlank(message = "End date is required")
-        @ValidDate
+        @ValidDate(groups = ValidDateInterface.class)
         String end
 ) {
 

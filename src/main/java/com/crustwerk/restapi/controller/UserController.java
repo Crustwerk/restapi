@@ -1,16 +1,13 @@
 package com.crustwerk.restapi.controller;
 
-import com.crustwerk.restapi.Utils;
 import com.crustwerk.restapi.dto.user.request.CreateUserRequest;
 import com.crustwerk.restapi.dto.user.request.DeleteUserRequest;
 import com.crustwerk.restapi.dto.user.request.UpdateUserRequest;
 import com.crustwerk.restapi.dto.user.response.CreateUserResponse;
 import com.crustwerk.restapi.dto.user.response.GetUserResponse;
-import com.crustwerk.restapi.exception.LegalAgeUserException;
 import com.crustwerk.restapi.mapper.UserMapper;
 import com.crustwerk.restapi.model.User;
 import com.crustwerk.restapi.service.UserService;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +36,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-@Validated
 public class UserController {
 
     private final UserService userService;
@@ -55,7 +51,7 @@ public class UserController {
      * In sua assenza Spring si aspetta una query string (es.?username=mario&email=...)
      */
     @PostMapping
-    public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest req) throws LegalAgeUserException {
+    public ResponseEntity<CreateUserResponse> createUser(@Validated @RequestBody CreateUserRequest req) {
         if (!req.password().equals(req.confirmPassword())) {
             throw new IllegalArgumentException("Password and Confirm Password do not match");
         }
@@ -90,7 +86,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GetUserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest request) {
+    public ResponseEntity<GetUserResponse> updateUser(@PathVariable Long id, @Validated @RequestBody UpdateUserRequest request) {
         if (!request.password().equals(request.confirmPassword())) {
             throw new IllegalArgumentException("Password and Confirm Password do not match");
         }
@@ -102,7 +98,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id, @Valid @RequestBody DeleteUserRequest request) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id, @Validated @RequestBody DeleteUserRequest request) {
         if (!request.password().equals(request.confirmPassword())) {
             throw new IllegalArgumentException("Password and Confirm Password do not match");
         }
