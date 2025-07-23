@@ -1,5 +1,6 @@
 package com.crustwerk.restapi.controller;
 
+import com.crustwerk.restapi.Utils;
 import com.crustwerk.restapi.dto.user.request.CreateUserRequest;
 import com.crustwerk.restapi.dto.user.request.DeleteUserRequest;
 import com.crustwerk.restapi.dto.user.request.UpdateUserRequest;
@@ -57,10 +58,6 @@ public class UserController {
         }
 
         LocalDate dateOfBirth = LocalDate.parse(req.dateOfBirth(), Utils.DATE_TIME_FORMATTER);
-        if (!dateOfBirth.isBefore(LocalDate.now().minusYears(18))) {
-            throw new LegalAgeUserException();
-        }
-
         User user = userMapper.toModel(req, dateOfBirth);
         User saved = userService.createUser(user, req.password());
         CreateUserResponse response = userMapper.toCreateUserResponse(saved);

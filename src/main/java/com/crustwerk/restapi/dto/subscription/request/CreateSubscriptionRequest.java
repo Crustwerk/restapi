@@ -13,12 +13,11 @@ import jakarta.validation.constraints.NotBlank;
  * Se invece specifichi un valore non valido, Jackson fallirà già in fase di deserializzazione (lanciando un <b>HttpMessageNotReadableException</b>), prima ancora della validazione.
  */
 public record CreateSubscriptionRequest(
-
-        @NotBlank
+        @NotBlank(message = "Subscription tier is required")
         @ValidEnum(enumClass = SubscriptionTier.class)
         String subscriptionTier,
 
-        @NotBlank
+        @NotBlank(message = "Subscription duration is required")
         @ValidEnum(enumClass = SubscriptionDuration.class)
         String subscriptionDuration
 ) {

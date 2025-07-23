@@ -1,20 +1,17 @@
 package com.crustwerk.restapi.dto.user.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.time.LocalDate;
 
 
 public record CreateUserResponse(
-
         Long id,
 
         String username,
 
         String email,
 
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        LocalDate dateOfBirth) {
+        LocalDate dateOfBirth
+) {
     public static final class CreateUserResponseBuilder {
         private Long id;
         private String username;

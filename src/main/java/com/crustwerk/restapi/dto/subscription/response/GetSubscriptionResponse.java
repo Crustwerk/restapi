@@ -5,9 +5,12 @@ import com.crustwerk.restapi.model.SubscriptionTier;
 
 import java.time.LocalDate;
 
-public record GetSubscriptionResponse(LocalDate start, LocalDate end, SubscriptionTier subscriptionTier,
-                                      SubscriptionDuration subscriptionDuration) {
-
+public record GetSubscriptionResponse(
+        LocalDate start,
+        LocalDate end,
+        SubscriptionTier subscriptionTier,
+        SubscriptionDuration subscriptionDuration
+) {
 
     public static final class GetSubscriptionResponseBuilder {
         private LocalDate start;

@@ -1,0 +1,14 @@
+Reminder validazioni
+    1. In entrata solo String o primitivi in modo da non bloccare la serializzazione in caso di errori di formattazione (es. LocalDate)
+    2. In uscita vanno bene tipi corretti (es. LocalDate, Enum, etc) senza validazioni
+    3. In caso di più validazioni custom in sequenza usare GroupSequence
+    4. Usare solo @Validated visto che attiva @GroupSequence (non usare più @Valid)
+    5. Per validazioni sul DTO usare @function (validazione custom)
+    6. Per controlli che vengono fatti dal service rifarsi a exception custom (es. EmailAlreadyUsedException)
+
+
+TODO:
+    1. Capire cosa avviene se in una sequenza A-B-C le validazioni A o B saltano:
+        a. Viene comunque eseguito tutto lo stack?
+    2. Bisogna throware un'eccezione per impedire che il flusso continui?
+    3. ?

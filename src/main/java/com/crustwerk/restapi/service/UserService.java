@@ -1,6 +1,6 @@
 package com.crustwerk.restapi.service;
 
-import com.crustwerk.restapi.dao.UserDao;
+import com.crustwerk.restapi.dao.UserDaoImpl;
 import com.crustwerk.restapi.exception.EmailAlreadyUsedException;
 import com.crustwerk.restapi.model.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,18 +20,18 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private final UserDao userDao;
+    private final UserDaoImpl userDaoImpl;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(UserDao userDao, BCryptPasswordEncoder passwordEncoder) {
-        this.userDao = userDao;
+    public UserService(UserDaoImpl userDaoImpl, BCryptPasswordEncoder passwordEncoder) {
+        this.userDaoImpl = userDaoImpl;
         this.passwordEncoder = passwordEncoder;
     }
 
     // Creazione di un nuovo User
     public User createUser(User user, String rawPassword) {
         // Verifica se l'email esiste già
-        if (userDao.existsByEmail(user.getEmail())) {
+        if (userDaoImpl.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyUsedException();
         }
 
@@ -44,18 +44,18 @@ public class UserService {
         user.setLastUpdateAt(now);
 
         // Salviamo l'utente nel database
-        userDao.addUser(user);
+        userDaoImpl.addUser(user);
         return user;
     }
 
     // Recupera tutti gli utenti
     public List<User> getAllUsers() {
-        return userDao.getAllUsers();
+        return userDaoImpl.getAllUsers();
     }
 
     // Recupera un User per ID
     public User getUserById(Long id) {
-        return userDao.getUserById(id);
+        return userDaoImpl.getUserById(id);
     }
 
     // Aggiorna un User
@@ -68,12 +68,12 @@ public class UserService {
         existing.setLastUpdateAt(LocalDate.now());
         existing.setPasswordHash(passwordEncoder.encode(rawPassword));
 
-        userDao.updateUser(existing);
+        userDaoImpl.updateUser(existing);
         return existing;
     }
 
     // Elimina un User
     public void deleteUser(Long id) {
-        userDao.deleteUser(id);
+        userDaoImpl.deleteUser(id);
     }
 }

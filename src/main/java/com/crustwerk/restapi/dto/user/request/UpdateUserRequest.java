@@ -9,7 +9,6 @@ import jakarta.validation.constraints.Past;
 import java.time.LocalDate;
 
 public record UpdateUserRequest(
-
         @NotBlank(message = "Username is required")
         String username,
 

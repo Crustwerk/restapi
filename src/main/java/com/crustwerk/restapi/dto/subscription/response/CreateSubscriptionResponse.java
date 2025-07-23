@@ -6,8 +6,13 @@ import com.crustwerk.restapi.model.SubscriptionTier;
 import java.time.LocalDate;
 
 
-public record CreateSubscriptionResponse(Long id, LocalDate start, LocalDate end, SubscriptionTier subscriptionTier,
-                                         SubscriptionDuration subscriptionDuration) {
+public record CreateSubscriptionResponse(
+        Long id,
+        LocalDate start,
+        LocalDate end,
+        SubscriptionTier subscriptionTier,
+        SubscriptionDuration subscriptionDuration
+) {
 
     public static final class CreateSubscriptionResponseBuilder {
         private Long id;

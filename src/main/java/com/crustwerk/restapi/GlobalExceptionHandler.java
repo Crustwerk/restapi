@@ -2,8 +2,6 @@ package com.crustwerk.restapi;
 
 import com.crustwerk.restapi.exception.ApiError;
 import com.crustwerk.restapi.exception.EmailAlreadyUsedException;
-import com.crustwerk.restapi.exception.InvalidDateRangeException;
-import com.crustwerk.restapi.exception.LegalAgeUserException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,18 +77,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailAlreadyUsedException.class)
     public ResponseEntity<ApiError> handleEmailAlreadyUsed(EmailAlreadyUsedException ex) {
-        ApiError error = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(InvalidDateRangeException.class)
-    public ResponseEntity<ApiError> handleInvalidDateRange(InvalidDateRangeException ex) {
-        ApiError error = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(LegalAgeUserException.class)
-    public ResponseEntity<ApiError> handleLegalAgeUser(LegalAgeUserException ex) {
         ApiError error = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }

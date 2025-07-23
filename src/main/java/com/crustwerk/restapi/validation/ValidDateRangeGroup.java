@@ -1,4 +1,4 @@
 package com.crustwerk.restapi.validation;
 
-public interface ValidDateInterface {
+public interface ValidDateRangeGroup {
 }

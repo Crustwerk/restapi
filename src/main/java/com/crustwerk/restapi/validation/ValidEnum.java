@@ -27,18 +27,18 @@ public @interface ValidEnum {
 
         @Override
         public void initialize(ValidEnum annotation) {
-            // Ottieni i valori dell'Enum dalla classe passata nell'annotazione
+            // Ottengo i valori dell'Enum dalla classe passata nell'annotazione
             this.enumConstants = annotation.enumClass().getEnumConstants();
 
-            // Costruisci il messaggio dinamico con i valori dell'Enum
+            // Costruisco il messaggio dinamico con i valori dell'Enum
             StringBuilder validValues = new StringBuilder();
             for (Enum<?> enumConstant : enumConstants) {
                 validValues.append(enumConstant.name()).append(", ");
             }
 
-            // Rimuovi l'ultima virgola e spazio
-            if (validValues.length() > 0) {
-                validValues.setLength(validValues.length() - 2);  // Rimuove l'ultima virgola e spazio
+            // Rimuovo l'ultima virgola e spazio
+            if (!validValues.isEmpty()) {
+                validValues.setLength(validValues.length() - 2);
             }
 
             validValuesMessage = validValues.toString();
@@ -47,20 +47,18 @@ public @interface ValidEnum {
         @Override
         public boolean isValid(String value, ConstraintValidatorContext context) {
             if (value == null) {
-                return true;  // Lascia che altre annotazioni come @NotNull gestiscano i null
+                return true;
             }
 
-            // Controlla se la stringa corrisponde a un valore dell'Enum
+            // Controllo se la stringa corrisponde a un valore dell'Enum
             for (Enum<?> enumConstant : enumConstants) {
                 if (enumConstant.name().equals(value)) {
-                    return true;  // Valore valido
+                    return true;
                 }
             }
 
-            // Se non è valido, imposta il messaggio dinamico
-
+            // Se non è valido, imposto il messaggio dinamico
             context.disableDefaultConstraintViolation();
-
             context.buildConstraintViolationWithTemplate(
                             "Invalid value '" + value + "'. Valid values are: " + validValuesMessage)
                     .addConstraintViolation();

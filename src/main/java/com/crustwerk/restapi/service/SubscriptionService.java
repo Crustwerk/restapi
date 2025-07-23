@@ -1,6 +1,6 @@
 package com.crustwerk.restapi.service;
 
-import com.crustwerk.restapi.dao.SubscriptionDao;
+import com.crustwerk.restapi.dao.SubscriptionDaoImpl;
 import com.crustwerk.restapi.model.Subscription;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +11,10 @@ import java.util.Optional;
 @Service
 public class SubscriptionService {
 
-    private final SubscriptionDao subscriptionDao;
+    private final SubscriptionDaoImpl subscriptionDaoImpl;
 
-    public SubscriptionService(SubscriptionDao subscriptionDao) {
-        this.subscriptionDao = subscriptionDao;
+    public SubscriptionService(SubscriptionDaoImpl subscriptionDaoImpl) {
+        this.subscriptionDaoImpl = subscriptionDaoImpl;
     }
 
     // Creazione di una nuova Subscription con la durata basata su un tipo
@@ -29,18 +29,18 @@ public class SubscriptionService {
         subscription.setEnd(end);
 
         // Salviamo la subscription usando JdbcTemplate nel DAO
-        subscriptionDao.addSubscription(subscription);
+        subscriptionDaoImpl.addSubscription(subscription);
         return subscription; // Restituiamo la subscription creata
     }
 
     // Recupera una Subscription per ID
     public Optional<Subscription> getSubscriptionById(Long id) {
-        Subscription subscription = subscriptionDao.getSubscriptionById(id);
+        Subscription subscription = subscriptionDaoImpl.getSubscriptionById(id);
         return Optional.ofNullable(subscription);
     }
 
     // Recupera tutte le Subscription tra due date
     public List<Subscription> getSubscriptionBetweenDates(LocalDate start, LocalDate end) {
-        return subscriptionDao.getAllSubscriptionByFilter(start, end);
+        return subscriptionDaoImpl.getAllSubscriptionByFilter(start, end);
     }
 }
