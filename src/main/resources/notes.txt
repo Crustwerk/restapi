@@ -5,8 +5,7 @@ Reminder validazioni
     4. Usare solo @Validated visto che attiva @GroupSequence (non usare più @Valid)
     5. Per validazioni sul DTO usare @function (validazione custom)
     6. Per controlli che vengono fatti dal service rifarsi a exception custom (es. EmailAlreadyUsedException)
-    7. Per comodità ogni validazione avrà come gruppo un'interfaccia Group che verrà referenziata come NomeValidazione.Group
-        sia nel default del constraint che in tutti i GroupSequence dove è richiesta.
+    7. Per comodità ogni validazione avrà come gruppo un'interfaccia interna "Group" che verrà referenziata come NomeValidazione.Group
 
 
 TODO:
@@ -14,3 +13,255 @@ TODO:
        a. Viene comunque eseguito tutto lo stack?
     2. Bisogna throware un'eccezione per impedire che il flusso continui?
     3. ?
+
+
+//UserDaoImpl - Corretta (by Claude.ai)
+    package com.crustwerk.restapi.dao;
+
+    import com.crustwerk.restapi.model.User;
+    import org.springframework.dao.EmptyResultDataAccessException;
+    import org.springframework.jdbc.core.JdbcTemplate;
+    import org.springframework.jdbc.core.RowMapper;
+    import org.springframework.jdbc.support.GeneratedKeyHolder;
+    import org.springframework.stereotype.Repository;
+
+    import java.sql.*;
+    import java.time.LocalDate;
+    import java.util.List;
+    import java.util.Optional;
+
+    @Repository
+    public class UserDaoImpl implements UserDao {
+
+        private final JdbcTemplate jdbcTemplate;
+
+        public UserDaoImpl(JdbcTemplate jdbcTemplate) {
+            this.jdbcTemplate = jdbcTemplate;
+        }
+
+        public boolean existsByEmail(String email) {
+            String sql = """
+                        SELECT COUNT(*) FROM "user"
+                        WHERE "email" = ?
+                    """;
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class, email);
+            return count != null && count > 0;
+        }
+
+        public Optional<User> getUserById(Long id) {
+            String sql = """
+                        SELECT * FROM "user"
+                        WHERE "id" = ?
+                    """;
+            try {
+                User user = jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
+                return Optional.ofNullable(user);
+            } catch (EmptyResultDataAccessException e) {
+                return Optional.empty();
+            }
+        }
+
+        public User addUser(User user) {
+            String sql = """
+                        INSERT INTO "user" ("username", "email", "password_hash", "date_of_birth", "created_at", "last_update_at")
+                        VALUES (?, ?, ?, ?, ?, ?)
+                    """;
+
+            GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+
+            jdbcTemplate.update(con -> {
+                PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, user.getUsername());
+                ps.setString(2, user.getEmail());
+                ps.setString(3, user.getPasswordHash());
+                ps.setDate(4, Date.valueOf(user.getDateOfBirth()));
+                ps.setDate(5, Date.valueOf(user.getCreatedAt()));
+                ps.setDate(6, Date.valueOf(user.getLastUpdateAt()));
+                return ps;
+            }, keyHolder);
+
+            // Imposta l'ID generato nell'oggetto user
+            user.setId(keyHolder.getKey().longValue());
+            return user;
+        }
+
+        public List<User> getAllUsers() {
+            String sql = """
+                        SELECT * FROM "user"
+                        ORDER BY "created_at" DESC
+                    """;
+            return jdbcTemplate.query(sql, new UserRowMapper());
+        }
+
+        public boolean updateUser(User user) {
+            String sql = """
+                        UPDATE "user"
+                        SET "username" = ?, "email" = ?, "password_hash" = ?, "date_of_birth" = ?, "last_update_at" = ?
+                        WHERE "id" = ?
+                    """;
+            int rowsAffected = jdbcTemplate.update(sql,
+                user.getUsername(),
+                user.getEmail(),
+                user.getPasswordHash(),
+                user.getDateOfBirth(),
+                user.getLastUpdateAt(),
+                user.getId()
+            );
+            return rowsAffected > 0;
+        }
+
+        public boolean deleteUser(Long id) {
+            String sql = """
+                        DELETE FROM "user"
+                        WHERE "id" = ?
+                    """;
+            int rowsAffected = jdbcTemplate.update(sql, id);
+            return rowsAffected > 0;
+        }
+
+        // Mappatore per User
+        private static class UserRowMapper implements RowMapper<User> {
+            @Override
+            public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                User user = new User();
+                user.setId(rs.getLong("id"));
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setPasswordHash(rs.getString("password_hash")); // Nome colonna corretto
+                user.setDateOfBirth(rs.getObject("date_of_birth", LocalDate.class)); // Nome colonna corretto
+                user.setCreatedAt(rs.getObject("created_at", LocalDate.class)); // Nome colonna corretto
+                user.setLastUpdateAt(rs.getObject("last_update_at", LocalDate.class)); // Nome colonna corretto
+                return user;
+            }
+        }
+    }
+
+
+//SubscriptionDaoImpl - Corretta (by Claude.ai)
+    package com.crustwerk.restapi.dao;
+
+    import com.crustwerk.restapi.model.Subscription;
+    import com.crustwerk.restapi.model.SubscriptionDuration;
+    import com.crustwerk.restapi.model.SubscriptionTier;
+    import org.springframework.dao.EmptyResultDataAccessException;
+    import org.springframework.jdbc.core.JdbcTemplate;
+    import org.springframework.jdbc.core.RowMapper;
+    import org.springframework.jdbc.support.GeneratedKeyHolder;
+    import org.springframework.stereotype.Repository;
+
+    import java.sql.*;
+    import java.time.LocalDate;
+    import java.util.List;
+    import java.util.Optional;
+
+    @Repository
+    public class SubscriptionDaoImpl implements SubscriptionDao {
+
+        private final JdbcTemplate jdbcTemplate;
+
+        public SubscriptionDaoImpl(JdbcTemplate jdbcTemplate) {
+            this.jdbcTemplate = jdbcTemplate;
+        }
+
+        public List<Subscription> getSubscriptionsByStartAfterAndEndBefore(LocalDate start, LocalDate end) {
+            String sql = """
+                        SELECT * FROM "subscription"
+                        WHERE "start" > ? AND "end" < ?
+                        ORDER BY "start" DESC
+                    """;
+            return jdbcTemplate.query(sql, new SubscriptionRowMapper(), start, end);
+        }
+
+        public List<Subscription> getAllSubscriptionByFilter(LocalDate start, LocalDate end) {
+            String sql = """
+                        SELECT * FROM "subscription" s
+                        WHERE
+                        (s."start" BETWEEN ? AND ? OR s."end" BETWEEN ? AND ?)
+                        OR
+                        (? BETWEEN s."start" AND s."end" OR ? BETWEEN s."start" AND s."end")
+                        ORDER BY s."start" DESC
+                    """;
+            return jdbcTemplate.query(sql, new SubscriptionRowMapper(), start, end, start, end, start, end);
+        }
+
+        public Optional<Subscription> getSubscriptionById(Long id) {
+            String sql = """
+                        SELECT * FROM "subscription"
+                        WHERE "id" = ?
+                    """;
+            try {
+                Subscription subscription = jdbcTemplate.queryForObject(sql, new SubscriptionRowMapper(), id);
+                return Optional.ofNullable(subscription);
+            } catch (EmptyResultDataAccessException e) {
+                return Optional.empty();
+            }
+        }
+
+        public Subscription addSubscription(Subscription subscription) {
+            String sql = """
+                        INSERT INTO "subscription" ("start", "end", "subscription_tier", "subscription_duration")
+                        VALUES (?, ?, ?, ?)
+                    """;
+            GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+
+            jdbcTemplate.update(con -> {
+                PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setDate(1, Date.valueOf(subscription.getStart()));
+                ps.setDate(2, Date.valueOf(subscription.getEnd()));
+                ps.setString(3, subscription.getSubscriptionTier().name());
+                ps.setString(4, subscription.getSubscriptionDuration().name());
+                return ps;
+            }, keyHolder);
+
+            // Imposta l'ID generato nella subscription
+            subscription.setId(keyHolder.getKey().longValue());
+            return subscription;
+        }
+
+        public List<Subscription> getAllSubscriptions() {
+            String sql = """
+                        SELECT * FROM "subscription"
+                        ORDER BY "start" DESC
+                    """;
+            return jdbcTemplate.query(sql, new SubscriptionRowMapper());
+        }
+
+        public boolean updateSubscription(Subscription subscription) {
+            String sql = """
+                        UPDATE "subscription"
+                        SET "start" = ?, "end" = ?, "subscription_tier" = ?, "subscription_duration" = ?
+                        WHERE "id" = ?
+                    """;
+            int rowsAffected = jdbcTemplate.update(sql,
+                subscription.getStart(),
+                subscription.getEnd(),
+                subscription.getSubscriptionTier().name(),
+                subscription.getSubscriptionDuration().name(),
+                subscription.getId()
+            );
+            return rowsAffected > 0;
+        }
+
+        public boolean deleteSubscription(Long id) {
+            String sql = """
+                        DELETE FROM "subscription"
+                        WHERE "id" = ?
+                    """;
+            int rowsAffected = jdbcTemplate.update(sql, id);
+            return rowsAffected > 0;
+        }
+
+        // Mappatore per Subscription
+        private static class SubscriptionRowMapper implements RowMapper<Subscription> {
+            @Override
+            public Subscription mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Subscription subscription = new Subscription();
+                subscription.setId(rs.getLong("id"));
+                subscription.setStart(rs.getObject("start", LocalDate.class));
+                subscription.setEnd(rs.getObject("end", LocalDate.class));
+                subscription.setSubscriptionTier(SubscriptionTier.valueOf(rs.getString("subscription_tier"))); // Nome colonna corretto
+                subscription.setSubscriptionDuration(SubscriptionDuration.valueOf(rs.getString("subscription_duration"))); // Nome colonna corretto
+                return subscription;
+            }
+        }
+    }

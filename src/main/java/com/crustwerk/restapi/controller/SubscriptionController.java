@@ -64,6 +64,10 @@ public class SubscriptionController {
         Subscription subscription = subscriptionMapper.toModel(start, end);
 
         List<Subscription> subscriptions = subscriptionService.getSubscriptionBetweenDates(subscription.getStart(), subscription.getEnd());
+
+        if (subscriptions.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.ok(subscriptions);
     }
 }

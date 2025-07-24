@@ -35,10 +35,20 @@ public @interface PasswordsMatch {
                 if (password == null || password.isEmpty() || confirmPassword == null || confirmPassword.isEmpty()) {
                     return true;
                 }
-                return password.equals(confirmPassword);
+                boolean matches = password.equals(confirmPassword);
+                if (!matches){
+                    context.disableDefaultConstraintViolation();
+                    context.buildConstraintViolationWithTemplate("Passwords do not match")
+                            .addPropertyNode("confirmPassword")
+                            .addConstraintViolation();
+
+                }
+
+                return matches;
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate("Error accessing password fields")
+                        .addPropertyNode("confirmPassword")
                         .addConstraintViolation();
 
                 return false;
