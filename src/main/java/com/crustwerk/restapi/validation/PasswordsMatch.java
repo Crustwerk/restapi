@@ -20,6 +20,9 @@ public @interface PasswordsMatch {
 
     Class<? extends Payload>[] payload() default {};
 
+    interface Group {
+    }
+
     class PasswordsMatchValidator implements ConstraintValidator<PasswordsMatch, Object> {
         @Override
         public boolean isValid(Object value, ConstraintValidatorContext context) {

@@ -1,6 +1,5 @@
 package com.crustwerk.restapi.validation;
 
-import com.crustwerk.restapi.Utils;
 import com.crustwerk.restapi.dto.subscription.request.GetSubscriptionBetweenDatesRequest;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
@@ -58,6 +57,9 @@ public @interface ValidDateRange {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+    interface Group {
+    }
 
     class ValidDateRangeValidator implements ConstraintValidator<ValidDateRange, GetSubscriptionBetweenDatesRequest> {
 

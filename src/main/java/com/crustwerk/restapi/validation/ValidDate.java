@@ -22,6 +22,9 @@ public @interface ValidDate {
 
     Class<? extends Payload>[] payload() default {};
 
+    interface Group {
+    }
+
     class ValidDateValidator implements ConstraintValidator<ValidDate, String> {
         @Override
         public void initialize(ValidDate constraintAnnotation) {

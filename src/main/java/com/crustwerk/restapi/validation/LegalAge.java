@@ -22,6 +22,9 @@ public @interface LegalAge {
 
     Class<? extends Payload>[] payload() default {};
 
+    interface Group {
+    }
+
     class LegalAgeValidator implements ConstraintValidator<LegalAge, String> {
         @Override
         public boolean isValid(String value, ConstraintValidatorContext context) {

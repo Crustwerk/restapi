@@ -53,10 +53,6 @@ public class UserController {
      */
     @PostMapping
     public ResponseEntity<CreateUserResponse> createUser(@Validated @RequestBody CreateUserRequest req) {
-        if (!req.password().equals(req.confirmPassword())) {
-            throw new IllegalArgumentException("Password and Confirm Password do not match");
-        }
-
         LocalDate dateOfBirth = LocalDate.parse(req.dateOfBirth(), Utils.DATE_TIME_FORMATTER);
         User user = userMapper.toModel(req, dateOfBirth);
         User saved = userService.createUser(user, req.password());
@@ -84,22 +80,14 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<GetUserResponse> updateUser(@PathVariable Long id, @Validated @RequestBody UpdateUserRequest request) {
-        if (!request.password().equals(request.confirmPassword())) {
-            throw new IllegalArgumentException("Password and Confirm Password do not match");
-        }
-
-        User user = userMapper.toModel(request);
+        LocalDate dateOfBirth = LocalDate.parse(request.dateOfBirth(), Utils.DATE_TIME_FORMATTER);
+        User user = userMapper.toModel(request, dateOfBirth);
         User updatedUser = userService.updateUser(id, user, request.password());
-
         return ResponseEntity.ok(userMapper.toGetUserResponse(updatedUser));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id, @Validated @RequestBody DeleteUserRequest request) {
-        if (!request.password().equals(request.confirmPassword())) {
-            throw new IllegalArgumentException("Password and Confirm Password do not match");
-        }
-
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

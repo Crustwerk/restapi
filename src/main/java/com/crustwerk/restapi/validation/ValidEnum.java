@@ -21,6 +21,9 @@ public @interface ValidEnum {
 
     Class<? extends Payload>[] payload() default {};
 
+    interface Group {
+    }
+
     class ValidEnumValidator implements ConstraintValidator<ValidEnum, String> {
         private Enum<?>[] enumConstants;
         private String validValuesMessage;
@@ -57,13 +60,12 @@ public @interface ValidEnum {
                 }
             }
 
-            // Se non è valido, imposto il messaggio dinamico
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(
                             "Invalid value '" + value + "'. Valid values are: " + validValuesMessage)
                     .addConstraintViolation();
 
-            return false;  // Valore non valido
+            return false;
         }
     }
 

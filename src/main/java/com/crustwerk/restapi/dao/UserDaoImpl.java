@@ -18,7 +18,6 @@ public class UserDaoImpl implements UserDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // Metodo 1: existsByEmail (verifica se un'email esiste nel DB)
     public boolean existsByEmail(String email) {
         String sql = """
                     SELECT COUNT(*) FROM "user"
@@ -28,7 +27,6 @@ public class UserDaoImpl implements UserDao {
         return count != null && count > 0;
     }
 
-    // Metodo 2: getUserById
     public User getUserById(Long id) {
         String sql = """
                     SELECT * FROM "user"
@@ -37,7 +35,6 @@ public class UserDaoImpl implements UserDao {
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, new UserRowMapper());
     }
 
-    // Metodo 3: addUser
     public void addUser(User user) {
         String sql = """
                     INSERT INTO "user" ("username", "email", "password_hash", "date_of_birth", "created_at", "last_update_at")
@@ -46,7 +43,6 @@ public class UserDaoImpl implements UserDao {
         jdbcTemplate.update(sql, user.getUsername(), user.getEmail(), user.getPasswordHash(), user.getDateOfBirth(), user.getCreatedAt(), user.getLastUpdateAt());
     }
 
-    // Metodo 4: getAllUsers
     public List<User> getAllUsers() {
         String sql = """
                     SELECT * FROM "user"
@@ -54,7 +50,6 @@ public class UserDaoImpl implements UserDao {
         return jdbcTemplate.query(sql, new UserRowMapper());
     }
 
-    // Metodo 5: updateUser
     public void updateUser(User user) {
         String sql = """
                     UPDATE "user" 
@@ -64,7 +59,6 @@ public class UserDaoImpl implements UserDao {
         jdbcTemplate.update(sql, user.getUsername(), user.getEmail(), user.getPasswordHash(), user.getDateOfBirth(), user.getCreatedAt(), user.getLastUpdateAt(), user.getId());
     }
 
-    // Metodo 6: deleteUser
     public void deleteUser(Long id) {
         String sql = """
                     DELETE FROM "user"

@@ -1,14 +1,12 @@
 package com.crustwerk.restapi.dto.user.request;
 
-import com.crustwerk.restapi.validation.LegalAge;
-import com.crustwerk.restapi.validation.PasswordsMatch;
-import com.crustwerk.restapi.validation.ValidDate;
+import com.crustwerk.restapi.validation.*;
 import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-@PasswordsMatch
-@GroupSequence({CreateUserRequest.class, ValidDate.class, LegalAge.class})
+@PasswordsMatch(groups = PasswordsMatch.Group.class)
+@GroupSequence({CreateUserRequest.class, PasswordsMatch.Group.class, ValidDate.Group.class, LegalAge.Group.class})
 public record CreateUserRequest(
         @NotBlank(message = "Username is required")
         String username,
@@ -23,8 +21,8 @@ public record CreateUserRequest(
         @NotBlank(message = "Confirm password is required")
         String confirmPassword,
 
-        @LegalAge
-        @ValidDate
+        @LegalAge(groups = LegalAge.Group.class)
+        @ValidDate(groups = ValidDate.Group.class)
         @NotBlank(message = "Date of birth is required")
         String dateOfBirth
 ) {

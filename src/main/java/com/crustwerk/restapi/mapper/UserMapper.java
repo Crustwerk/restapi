@@ -31,12 +31,12 @@ public class UserMapper {
         return user;
     }
 
-    public User toModel(UpdateUserRequest updateUserRequest) {
+    public User toModel(UpdateUserRequest updateUserRequest, LocalDate dateOfBirth) {
         if (updateUserRequest == null) return null;
         User user = new User();
         user.setUsername(updateUserRequest.username());
         user.setEmail(updateUserRequest.email());
-        user.setDateOfBirth(updateUserRequest.dateOfBirth());
+        user.setDateOfBirth(dateOfBirth);
         return user;
     }
 

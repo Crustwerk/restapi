@@ -22,7 +22,6 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // Metodo 1: getSubscriptionsByStartAfterAndEndBefore
     public List<Subscription> getSubscriptionsByStartAfterAndEndBefore(LocalDate start, LocalDate end) {
         String sql = """
                     SELECT * FROM "subscription"
@@ -31,7 +30,6 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
         return jdbcTemplate.query(sql, new Object[]{start, end}, new SubscriptionRowMapper());
     }
 
-    // Metodo 2: getAllSubscriptionByFilter (query nativa avanzata)
     public List<Subscription> getAllSubscriptionByFilter(LocalDate start, LocalDate end) {
         String sql = """
                     SELECT * FROM "subscription" s
@@ -43,7 +41,6 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
         return jdbcTemplate.query(sql, new Object[]{start, end, start, end, start, end}, new SubscriptionRowMapper());
     }
 
-    // Metodo 3: getSubscriptionById
     public Subscription getSubscriptionById(Long id) {
         String sql = """
                     SELECT * FROM "subscription"
@@ -56,7 +53,6 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
         }
     }
 
-    // Metodo 4: addSubscription
     public void addSubscription(Subscription subscription) {
         String sql = """
                     INSERT INTO "subscription" ("start", "end", "subscription_tier", "subscription_duration")

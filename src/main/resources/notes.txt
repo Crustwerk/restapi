@@ -5,10 +5,12 @@ Reminder validazioni
     4. Usare solo @Validated visto che attiva @GroupSequence (non usare più @Valid)
     5. Per validazioni sul DTO usare @function (validazione custom)
     6. Per controlli che vengono fatti dal service rifarsi a exception custom (es. EmailAlreadyUsedException)
+    7. Per comodità ogni validazione avrà come gruppo un'interfaccia Group che verrà referenziata come NomeValidazione.Group
+        sia nel default del constraint che in tutti i GroupSequence dove è richiesta.
 
 
 TODO:
     1. Capire cosa avviene se in una sequenza A-B-C le validazioni A o B saltano:
-        a. Viene comunque eseguito tutto lo stack?
+       a. Viene comunque eseguito tutto lo stack?
     2. Bisogna throware un'eccezione per impedire che il flusso continui?
     3. ?

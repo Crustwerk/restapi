@@ -37,9 +37,7 @@ public class SubscriptionController {
         SubscriptionTier tier = SubscriptionTier.valueOf(req.subscriptionTier());
         SubscriptionDuration duration = SubscriptionDuration.valueOf(req.subscriptionDuration());
         Subscription subscription = subscriptionMapper.toModel(tier, duration);
-
         Subscription saved = subscriptionService.createSubscription(subscription);
-
         CreateSubscriptionResponse response = subscriptionMapper.toCreateSubscriptionResponse(saved);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

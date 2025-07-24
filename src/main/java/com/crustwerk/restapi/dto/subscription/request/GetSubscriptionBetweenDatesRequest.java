@@ -1,22 +1,25 @@
 package com.crustwerk.restapi.dto.subscription.request;
 
 import com.crustwerk.restapi.validation.ValidDate;
-import com.crustwerk.restapi.validation.ValidDateGroup;
 import com.crustwerk.restapi.validation.ValidDateRange;
-import com.crustwerk.restapi.validation.ValidDateRangeGroup;
 import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.NotBlank;
 
-
-@ValidDateRange(groups = ValidDateRangeGroup.class)
-@GroupSequence({GetSubscriptionBetweenDatesRequest.class, ValidDateGroup.class, ValidDateRangeGroup.class})
+/**
+ * <b>Bean Validation standard (JSR-303/380)</b> il gruppo di default è Default.class
+ * <br>
+ *
+ * <b>Spring's Bean Validation integration</b> quando usi @GroupSequence su una classe, quella classe diventa il gruppo di default per le sue validazioni
+ */
+@ValidDateRange(groups = {ValidDateRange.Group.class})
+@GroupSequence({GetSubscriptionBetweenDatesRequest.class, ValidDate.Group.class, ValidDateRange.Group.class})
 public record GetSubscriptionBetweenDatesRequest(
         @NotBlank(message = "Start date is required")
-        @ValidDate(groups = ValidDateGroup.class)
+        @ValidDate(groups = ValidDate.Group.class)
         String start,
 
         @NotBlank(message = "End date is required")
-        @ValidDate(groups = ValidDateGroup.class)
+        @ValidDate(groups = ValidDate.Group.class)
         String end
 ) {
 
