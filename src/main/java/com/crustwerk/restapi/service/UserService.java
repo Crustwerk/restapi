@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Contiene la logica di dominio relativa agli utenti.
@@ -28,51 +29,43 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Creazione di un nuovo User
     public User createUser(User user, String rawPassword) {
-        // Verifica se l'email esiste già
         if (userDaoImpl.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyUsedException();
         }
 
-        // Cripta la password
         user.setPasswordHash(passwordEncoder.encode(rawPassword));
 
-        // Imposta le date
         LocalDate now = LocalDate.now();
         user.setCreatedAt(now);
         user.setLastUpdateAt(now);
 
-        // Salviamo l'utente nel database
         userDaoImpl.addUser(user);
         return user;
     }
 
-    // Recupera tutti gli utenti
     public List<User> getAllUsers() {
         return userDaoImpl.getAllUsers();
     }
 
-    // Recupera un User per ID
-    public User getUserById(Long id) {
-        return userDaoImpl.getUserById(id);
+    public Optional<User> getUserById(Long id) {
+        return Optional.ofNullable(userDaoImpl.getUserById(id));
     }
 
-    // Aggiorna un User
-    public User updateUser(Long id, User newUserData, String rawPassword) {
-        User existing = getUserById(id);
+    public Optional<User> updateUser(Long id, User newUserData) {
+        Optional<User> existingOptional = getUserById(id);
 
-        existing.setUsername(newUserData.getUsername());
-        existing.setEmail(newUserData.getEmail());
-        existing.setDateOfBirth(newUserData.getDateOfBirth());
-        existing.setLastUpdateAt(LocalDate.now());
-        existing.setPasswordHash(passwordEncoder.encode(rawPassword));
+        existingOptional.ifPresent(user -> {
+            user.setUsername(newUserData.getUsername());
+            user.setEmail(newUserData.getEmail());
+            user.setDateOfBirth(newUserData.getDateOfBirth());
+            user.setLastUpdateAt(LocalDate.now());
+            userDaoImpl.updateUser(user);
+        });
 
-        userDaoImpl.updateUser(existing);
-        return existing;
+        return existingOptional;
     }
 
-    // Elimina un User
     public void deleteUser(Long id) {
         userDaoImpl.deleteUser(id);
     }

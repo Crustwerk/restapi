@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * <p>
@@ -63,27 +64,34 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<GetUserResponse>> getAllUsers() {
         List<User> users = userService.getAllUsers();
+        if (users.isEmpty()) return ResponseEntity.noContent().build();
+
         List<GetUserResponse> dtos = new ArrayList<>();
+
         for (User user : users) {
             GetUserResponse dto = userMapper.toGetUserResponse(user);
             dtos.add(dto);
         }
+
         return ResponseEntity.ok(dtos);
     }
 
-    //TODO adeguare a SubscriptionController (Optional)
     @GetMapping("/{id}")
     public ResponseEntity<GetUserResponse> getUserById(@PathVariable @Min(1) Long id) {
-        User user = userService.getUserById(id);
-        return ResponseEntity.ok(userMapper.toGetUserResponse(user));
+        Optional<User> userOptional = userService.getUserById(id);
+        return userOptional
+                .map(user -> ResponseEntity.ok(userMapper.toGetUserResponse(user)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<GetUserResponse> updateUser(@PathVariable Long id, @Validated @RequestBody UpdateUserRequest request) {
         LocalDate dateOfBirth = LocalDate.parse(request.dateOfBirth(), Utils.DATE_TIME_FORMATTER);
         User user = userMapper.toModel(request, dateOfBirth);
-        User updatedUser = userService.updateUser(id, user, request.password());
-        return ResponseEntity.ok(userMapper.toGetUserResponse(updatedUser));
+        Optional<User> updatedUserOptional = userService.updateUser(id, user);
+        return updatedUserOptional
+                .map(updatedUser -> ResponseEntity.ok(userMapper.toGetUserResponse(updatedUser)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

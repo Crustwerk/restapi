@@ -1,6 +1,7 @@
 package com.crustwerk.restapi.dao;
 
 import com.crustwerk.restapi.model.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -32,7 +33,11 @@ public class UserDaoImpl implements UserDao {
                     SELECT * FROM "user"
                     WHERE "id" = ?
                 """;
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, new UserRowMapper());
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{id}, new UserRowMapper());
+        } catch (EmptyResultDataAccessException ex){
+            return null;
+        }
     }
 
     public void addUser(User user) {
