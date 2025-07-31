@@ -7,7 +7,7 @@ VALUES ('GiovanniRossi', 'giovanni.rossi@example.com', 'hashedpassword123', '199
 
 -- Subscription
 INSERT INTO "subscription" ("start", "end", "subscription_tier", "subscription_duration")
-VALUES ('2025-01-01', '2025-02-01', 'BASIC', 'MONTHLY');
+VALUES ('2025-01-01', '2025-02-01', 'FREE', 'MONTHLY');
 
 INSERT INTO "subscription" ("start", "end", "subscription_tier", "subscription_duration")
 VALUES ('2025-01-01', '2025-12-31', 'PREMIUM', 'YEARLY');

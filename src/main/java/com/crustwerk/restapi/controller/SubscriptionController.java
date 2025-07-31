@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,5 +70,19 @@ public class SubscriptionController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(subscriptions);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<GetSubscriptionResponse>> getAllSubscriptions() {
+        List<Subscription> subscriptions = subscriptionService.getAllSubscriptions();
+        if (subscriptions.isEmpty()) return ResponseEntity.noContent().build();
+
+        List<GetSubscriptionResponse> dtos = new ArrayList<>();
+
+        for (Subscription subscription : subscriptions) {
+            GetSubscriptionResponse dto = subscriptionMapper.toGetSubscriptionResponse(subscription);
+            dtos.add(dto);
+        }
+        return ResponseEntity.ok(dtos);
     }
 }

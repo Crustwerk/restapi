@@ -61,7 +61,7 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<GetUserResponse>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         if (users.isEmpty()) return ResponseEntity.noContent().build();

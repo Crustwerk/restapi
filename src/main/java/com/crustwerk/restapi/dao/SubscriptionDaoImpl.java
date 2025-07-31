@@ -73,6 +73,13 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
         subscription.setId(keyHolder.getKey().longValue());
     }
 
+    public List<Subscription> getAllSubscriptions() {
+        String sql = """
+                SELECT *  FROM "subscription"
+                """;
+        return jdbcTemplate.query(sql, new SubscriptionRowMapper());
+    }
+
     // Mappatore per Subscription
     private static class SubscriptionRowMapper implements RowMapper<Subscription> {
         @Override
@@ -81,8 +88,8 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
             subscription.setId(rs.getLong("id"));
             subscription.setStart(rs.getObject("start", LocalDate.class));
             subscription.setEnd(rs.getObject("end", LocalDate.class));
-            subscription.setSubscriptionTier(SubscriptionTier.valueOf(rs.getString("subscriptionTier")));
-            subscription.setSubscriptionDuration(SubscriptionDuration.valueOf(rs.getString("subscriptionDuration")));
+            subscription.setSubscriptionTier(SubscriptionTier.valueOf(rs.getString("subscription_tier")));
+            subscription.setSubscriptionDuration(SubscriptionDuration.valueOf(rs.getString("subscription_duration")));
             return subscription;
         }
     }

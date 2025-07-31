@@ -43,4 +43,8 @@ public class SubscriptionService {
     public List<Subscription> getSubscriptionBetweenDates(LocalDate start, LocalDate end) {
         return subscriptionDaoImpl.getAllSubscriptionByFilter(start, end);
     }
+
+    public List<Subscription> getAllSubscriptions() {
+        return subscriptionDaoImpl.getAllSubscriptions();
+    }
 }

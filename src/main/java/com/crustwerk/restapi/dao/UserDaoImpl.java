@@ -4,10 +4,10 @@ import com.crustwerk.restapi.model.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 @Repository
@@ -35,17 +35,31 @@ public class UserDaoImpl implements UserDao {
                 """;
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{id}, new UserRowMapper());
-        } catch (EmptyResultDataAccessException ex){
+        } catch (EmptyResultDataAccessException ex) {
             return null;
         }
     }
 
     public void addUser(User user) {
+
         String sql = """
                     INSERT INTO "user" ("username", "email", "password_hash", "date_of_birth", "created_at", "last_update_at")
                     VALUES (?, ?, ?, ?, ?, ?)
                 """;
-        jdbcTemplate.update(sql, user.getUsername(), user.getEmail(), user.getPasswordHash(), user.getDateOfBirth(), user.getCreatedAt(), user.getLastUpdateAt());
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPasswordHash());
+            ps.setDate(4, Date.valueOf(user.getDateOfBirth()));
+            ps.setDate(5, Date.valueOf(user.getCreatedAt()));
+            ps.setDate(6, Date.valueOf(user.getLastUpdateAt()));
+            return ps;
+        }, keyHolder);
+
+        user.setId(keyHolder.getKey().longValue());
     }
 
     public List<User> getAllUsers() {
@@ -57,7 +71,7 @@ public class UserDaoImpl implements UserDao {
 
     public void updateUser(User user) {
         String sql = """
-                    UPDATE "user" 
+                    UPDATE "user"
                     SET "username" = ?, "email" = ?, "password_hash" = ?, "date_of_birth" = ?, "created_at" = ?, "last_update_at" = ?
                     WHERE "id" = ?
                 """;
@@ -80,10 +94,10 @@ public class UserDaoImpl implements UserDao {
             user.setId(rs.getLong("id"));
             user.setUsername(rs.getString("username"));
             user.setEmail(rs.getString("email"));
-            user.setPasswordHash(rs.getString("passwordHash"));
-            user.setDateOfBirth(rs.getObject("dateOfBirth", java.time.LocalDate.class));
-            user.setCreatedAt(rs.getObject("createdAt", java.time.LocalDate.class));
-            user.setLastUpdateAt(rs.getObject("lastUpdateAt", java.time.LocalDate.class));
+            user.setPasswordHash(rs.getString("password_hash"));
+            user.setDateOfBirth(rs.getObject("date_of_birth", java.time.LocalDate.class));
+            user.setCreatedAt(rs.getObject("created_at", java.time.LocalDate.class));
+            user.setLastUpdateAt(rs.getObject("last_update_at", java.time.LocalDate.class));
             return user;
         }
     }
