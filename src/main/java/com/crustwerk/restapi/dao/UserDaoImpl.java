@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -40,7 +41,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    public void addUser(User user) {
+    public long createUser(User user) {
 
         String sql = """
                     INSERT INTO "user" ("username", "email", "password_hash", "date_of_birth", "created_at", "last_update_at")
@@ -59,7 +60,8 @@ public class UserDaoImpl implements UserDao {
             return ps;
         }, keyHolder);
 
-        user.setId(keyHolder.getKey().longValue());
+        //TODO: valutare creazione nuova eccezione da throware in caso di NPE
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public List<User> getAllUsers() {

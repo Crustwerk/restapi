@@ -39,9 +39,8 @@ public class UserService {
         LocalDate now = LocalDate.now();
         user.setCreatedAt(now);
         user.setLastUpdateAt(now);
-
-        userDaoImpl.addUser(user);
-        return user;
+        Long id = userDaoImpl.createUser(user);
+        return userDaoImpl.getUserById(id);
     }
 
     public List<User> getAllUsers() {
